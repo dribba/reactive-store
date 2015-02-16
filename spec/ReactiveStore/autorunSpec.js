@@ -34,4 +34,21 @@ describe('ReactiveStore.autorun()', function() {
         rs1.set('a.value', 'something');
         rs1.set('a.value', 'something else');
     });
+
+    it('will not re-notify if the same value is set', function() {
+        var count = 0;
+        rs1.autorun(function() {
+            rs1.get('a');
+            count++;
+        });
+        expect(count).toBe(1);
+        rs1.set('a', 'value');
+        expect(count).toBe(2);
+        rs1.set('a', 'value');
+        expect(count).toBe(2);
+        rs1.set('a', 'value');
+        expect(count).toBe(2);
+        rs1.set('a', 'another');
+        expect(count).toBe(3);
+    });
 });

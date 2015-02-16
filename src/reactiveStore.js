@@ -87,8 +87,10 @@ ReactiveStore = function () {
     return {
         set: function (key, val) {
             var obj = getFromDict(key);
-            obj.value = val;
-            notify(key);
+            if(obj.value !== val) {
+                obj.value = val;
+                notify(key);
+            }
         },
         get: function (key) {
             var obj = getFromDict(key);
