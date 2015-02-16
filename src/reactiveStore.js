@@ -60,7 +60,10 @@ ReactiveStore = function () {
         dict[key] = dict[key] || {value: undefined, deps: []};  // Need this to have a deps for this key
         return _.reduce(keys, function (ret, k) {
             var propName = k.replace(key + '.', '');
-            _fn.setProp(propName, ret.value, dict[k].value);
+            var value = dict[k].value;
+            if(value !== undefined) {
+                _fn.setProp(propName, ret.value, value);
+            }
             return ret;
         }, {value: {}, deps: dict[key].deps});
     }
@@ -99,6 +102,13 @@ ReactiveStore = function () {
             obj.deps.push(dep);
             return obj.value;
         },
+        dump: function() {
+            return _.reduce(_.keys(dict), function(ret, key) {
+                ret[key] = dict[key].value;
+                return ret;
+            }, {})
+        },
+
         autorun: function (fn) {
             var ctx = _.find(contextList, {fn: fn});
             if (ctx) {
