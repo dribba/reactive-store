@@ -56,11 +56,13 @@ ReactiveStore = function () {
         if (keys.length === 1 && keys[0] === key) {
             return dict[key];
         }
+
+        dict[key] = dict[key] || {value: undefined, deps: []};  // Need this to have a deps for this key
         return _.reduce(keys, function (ret, k) {
             var propName = k.replace(key + '.', '');
             _fn.setProp(propName, ret.value, dict[k].value);
             return ret;
-        }, {value: {}, deps: []});
+        }, {value: {}, deps: dict[key].deps});
     }
 
     function notify(key) {
