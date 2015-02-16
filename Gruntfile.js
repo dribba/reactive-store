@@ -20,7 +20,7 @@ module.exports = function(grunt) {
         },
         jasmine: {
             pivotal: {
-                src: ['src/session.js', 'src/session.builder.js'],
+                src: ['src/session.js', 'src/session.builder.js', 'src/ReactiveStore.js'],
                 options: {
                     specs: 'spec/**/*Spec.js',
                     helpers: 'spec/*Helper.js',
