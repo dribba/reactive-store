@@ -87,12 +87,23 @@ ReactiveStore = function () {
         });
     }
 
-    return {
+    var that = {
         set: function (key, val) {
-            var obj = getFromDict(key);
-            if(obj.value !== val) {
-                obj.value = val;
-                notify(key);
+            _.isPlainObject(val) ? setObject() : setValue();
+
+
+            function setObject() {
+                _.each(val, function(v, k) {
+                    that.set(key+'.'+k, v);
+                });
+            }
+
+            function setValue() {
+                var obj = getFromDict(key);
+                if(obj.value !== val) {
+                    obj.value = val;
+                    notify(key);
+                }
             }
         },
         get: function (key) {
@@ -119,5 +130,6 @@ ReactiveStore = function () {
                 contextList.push(ctx);
             }
         }
-    }
+    };
+    return that;
 };

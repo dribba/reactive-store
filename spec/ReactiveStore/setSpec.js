@@ -34,5 +34,19 @@ describe('ReactiveStore.set', function() {
         expect(rs1.get('a')).toEqual({value: 'a value', another: 'another', something: 'something'});
     });
 
-
+    it('should be able to handle an object', function() {
+        var obj = {
+            'value': 'value',
+            'a.value': 'another',
+            object: {
+                something: 'something'
+            }
+        }
+        rs1.set('o', obj);
+        expect(rs1.dump()).toEqual({
+            'o.value':'value',
+            'o.a.value': 'another',
+            'o.object.something': 'something'
+        });
+    });
 });
