@@ -5,7 +5,7 @@ describe('ReactiveStore.autorun()', function() {
         rs1 = ReactiveStore();
     });
 
-    it('will react to a change in value', function(done) {
+    it('will react to a change in value only once per change', function(done) {
         var count = 0;
         rs1.autorun(function() {
             var value = rs1.get('something');
