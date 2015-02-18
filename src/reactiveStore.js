@@ -2,6 +2,7 @@ ReactiveStore = function () {
     "use strict";
     var currentContext;
     var dict = {};
+    var debug;
 
     var contextList = [];
 
@@ -89,6 +90,7 @@ ReactiveStore = function () {
 
     var that = {
         set: function (key, val) {
+            debug && console.log('set('+key+', '+val+')');
             _.isPlainObject(val) ? setObject() : setValue();
 
 
@@ -107,6 +109,7 @@ ReactiveStore = function () {
             }
         },
         get: function (key) {
+            debug && console.log('get('+key+')');
             var obj = getFromDict(key);
             var dep = Dependency();
             dep.depend();
@@ -128,6 +131,15 @@ ReactiveStore = function () {
                 ctx = Context(fn);
                 ctx.run({firstRun: true});
                 contextList.push(ctx);
+            }
+        },
+
+        debug: {
+            on: function() {
+                debug = true;
+            },
+            off: function() {
+                debug = false;
             }
         }
     };
