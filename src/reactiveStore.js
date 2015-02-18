@@ -134,6 +134,13 @@ ReactiveStore = function () {
             }
         },
 
+        nonReactive: function(fn) {
+            var prevContext = currentContext;
+            currentContext = undefined;
+            fn();
+            currentContext = prevContext;
+        },
+
         debug: {
             on: function() {
                 debug = true;
