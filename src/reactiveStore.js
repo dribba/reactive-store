@@ -118,13 +118,16 @@ ReactiveStore = function () {
         },
         dump: function() {
             return _.reduce(_.keys(dict), function(ret, key) {
-                ret[key] = dict[key].value;
+                var v = dict[key].value;
+                _.isDate(v) && (v = v.toISOString());
+                ret[key] = v;
                 return ret;
             }, {})
         },
 
         load: function(obj) {
             _.each(obj, function(v, k) {
+                /(\d{4})-(\d{2})-(\d{2})T(\d{2})\:(\d{2})\:(\d{2})/.test(v) && (v = new Date(v));
                 dict[k] = {value: v, deps:[]};
             });
         },

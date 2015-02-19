@@ -1,11 +1,13 @@
 describe('ReactiveStore.load()', function(){
     var rs;
     var dump;
+    var date = new Date();
 
     beforeEach(function() {
         rs = ReactiveStore();
         rs.set('a',1);
         rs.set('b',{foo:2});
+        rs.set('date', date);
         dump = rs.dump();
         rs = ReactiveStore();
         rs.load(dump);
@@ -27,5 +29,9 @@ describe('ReactiveStore.load()', function(){
         rs.load(dump);
         expect(rs.get('a')).toBe(1);
         expect(spy.calls.count()).toBe(2);
+    });
+
+    it('should convert dates back into a date object', function() {
+        expect(_.isDate(rs.get('date'))).toBe(true);
     });
 });
