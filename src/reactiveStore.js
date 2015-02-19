@@ -123,6 +123,12 @@ ReactiveStore = function () {
             }, {})
         },
 
+        load: function(obj) {
+            _.each(obj, function(v, k) {
+                dict[k] = {value: v, deps:[]};
+            });
+        },
+
         autorun: function (fn) {
             var ctx = _.find(contextList, {fn: fn});
             if (ctx) {
