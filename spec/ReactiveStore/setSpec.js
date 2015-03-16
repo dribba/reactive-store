@@ -49,4 +49,14 @@ describe('ReactiveStore.set', function() {
             'o.object.something': 'something'
         });
     });
+
+    it('should be able to set an array and get an array item', function() {
+        rs1.set('arr', [1,2,3]);
+        expect(rs1.get('arr.1')).toBe(2);
+    });
+
+    it('should return an array when array stored', function() {
+        rs1.set('arr', [0,1,2]);
+        expect(Array.isArray(rs1.get('arr'))).toBe(true);
+    });
 });

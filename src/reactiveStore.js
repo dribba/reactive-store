@@ -59,14 +59,37 @@ ReactiveStore = function () {
         }
 
         dict[key] = dict[key] || {value: undefined, deps: []};  // Need this to have a deps for this key
-        return _.reduce(keys, function (ret, k) {
-            var propName = k.replace(key + '.', '');
-            var value = dict[k].value;
-            if(value !== undefined) {
-                _fn.setProp(propName, ret.value, value);
-            }
-            return ret;
-        }, {value: {}, deps: dict[key].deps});
+
+        return isArray(keys) ? array() : object();
+
+
+        function array() {
+            return _.reduce(keys, function(ret, k) {
+                var propName = k.replace(key + '.', '');
+                var value = dict[k].value;
+                if(value !== undefined) {
+                    ret[k] = value;
+                }
+                return ret;
+            }, {value:[], deps: dict[key].deps});
+        }
+
+        function object() {
+            return _.reduce(keys, function (ret, k) {
+                var propName = k.replace(key + '.', '');
+                var value = dict[k].value;
+                if (value !== undefined) {
+                    _fn.setProp(propName, ret.value, value);
+                }
+                return ret;
+            }, {value: {}, deps: dict[key].deps});
+        }
+
+        function isArray(keys) {
+            return _.every(keys, function(key) {
+                return /^[^\.]*\.[0-9]*$/.test(key);
+            });
+        }
     }
 
     function notify(key) {
@@ -91,12 +114,18 @@ ReactiveStore = function () {
     var that = {
         set: function (key, val) {
             debug && console.log('set('+key+', '+val+')');
-            _.isPlainObject(val) ? setObject() : setValue();
+            _.isPlainObject(val) ? setObject() : (_.isArray(val) ? setArray() : setValue());
 
 
             function setObject() {
                 _.each(val, function(v, k) {
                     that.set(key+'.'+k, v);
+                });
+            }
+
+            function setArray() {
+                _.each(val, function(v, idx) {
+                    that.set(key+'.'+idx, v);
                 });
             }
 

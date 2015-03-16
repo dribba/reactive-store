@@ -7,6 +7,7 @@ describe('ReactiveStore.dump()', function() {
         rs.set('value1', 'a value');
         rs.set('some.deep.value', 'another');
         rs.set('date', date);
+        rs.set('arr', [1,2,3]);
     });
 
     it('should dump an object with the values', function() {
@@ -18,5 +19,10 @@ describe('ReactiveStore.dump()', function() {
     it('should serialize dates using ISO string', function() {
         var o = rs.dump();
         expect(o.date).toBe(date.toISOString());
+    });
+
+    it('should dump an object with arrays', function() {
+        var o = rs.dump();
+        expect(o['arr.1']).toBe(2);
     });
 });

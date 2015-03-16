@@ -20,6 +20,4 @@ describe('ReactiveStore.get()', function() {
         rs1.set('a.valueB', 'another');
         expect(rs1.get('a')).toEqual({valueA: 'some value', valueB: 'another'});
     });
-
-
 });

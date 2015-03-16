@@ -8,6 +8,7 @@ describe('ReactiveStore.load()', function(){
         rs.set('a',1);
         rs.set('b',{foo:2});
         rs.set('date', date);
+        rs.set('arr', [0,1,2]);
         dump = rs.dump();
         rs = ReactiveStore();
         rs.load(dump);
@@ -33,5 +34,9 @@ describe('ReactiveStore.load()', function(){
 
     it('should convert dates back into a date object', function() {
         expect(_.isDate(rs.get('date'))).toBe(true);
+    });
+
+    it('should restore arrays', function() {
+        expect(Array.isArray(rs.get('arr'))).toBe(true);
     });
 });
