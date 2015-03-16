@@ -59,4 +59,11 @@ describe('ReactiveStore.set', function() {
         rs1.set('arr', [0,1,2]);
         expect(Array.isArray(rs1.get('arr'))).toBe(true);
     });
+
+    it('should return array of objects if array of objects stored', function() {
+        rs1.set('objArr', [{a:1},{a:2},{a:3}]);
+        expect(rs1.get('objArr.0').a).toBe(1);
+        expect(rs1.get('objArr.0.a')).toBe(1);
+
+    });
 });
