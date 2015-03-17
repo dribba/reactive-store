@@ -64,6 +64,6 @@ describe('ReactiveStore.set', function() {
         rs1.set('objArr', [{a:1},{a:2},{a:3}]);
         expect(rs1.get('objArr.0').a).toBe(1);
         expect(rs1.get('objArr.0.a')).toBe(1);
-
+        expect(_.isArray(rs1.get('objArr'))).toBe(true);
     });
 });

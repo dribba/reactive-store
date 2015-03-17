@@ -143,7 +143,19 @@ ReactiveStore = function () {
             var dep = Dependency();
             dep.depend();
             obj.deps.push(dep);
-            return obj.value;
+            return isArray(obj.value) ? makeArray(obj.value) : obj.value;
+
+            function isArray(v) {
+                return _.isPlainObject(v) && _.every(Object.keys(v), function(k) {
+                        return /^[0-9]*$/.test(k);
+                    })
+            }
+            function makeArray(v) {
+                return _.reduce(v, function(ret, v, k) {
+                    ret[k] = v;
+                    return ret;
+                }, []);
+            }
         },
         dump: function() {
             return _.reduce(_.keys(dict), function(ret, key) {
