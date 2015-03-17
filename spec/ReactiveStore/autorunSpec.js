@@ -23,7 +23,7 @@ describe('ReactiveStore.autorun()', function() {
         expect([aCount, bCount]).toEqual([2,2]);
     });
 
-    it('will react to a change in value only once per change', function() {
+    it('will notify for a change in value only once per change', function() {
         var count = 0;
         var value;
         rs1.autorun(function() {
@@ -73,16 +73,24 @@ describe('ReactiveStore.autorun()', function() {
     });
 
     it('should still notify after a clearChildren() call', function() {
-        var spy = jasmine.createSpy();
-        rs1.set('val', {a:1,b:2});
+        var valSpy = jasmine.createSpy();
+        var aSpy = jasmine.createSpy();
+
+        rs1.set('val', {a:1});
         rs1.autorun(function() {
-            spy();
+            valSpy();
             rs1.get('val');
         });
-        expect(spy.calls.count()).toBe(1);
+        rs1.autorun(function() {
+            aSpy();
+            rs1.get('val.a');
+        });
+        expect(valSpy.calls.count()).toBe(1);
+        expect(aSpy.calls.count()).toBe(1);
         rs1.clearChildren('val');
-        expect(spy.calls.count()).toBe(1);
-        rs1.set('val', {c:3});
-        expect(spy.calls.count()).toBe(2);
+        expect(valSpy.calls.count()).toBe(1);
+        rs1.set('val', {a:2});
+        expect(valSpy.calls.count()).toBe(2);
+        expect(aSpy.calls.count()).toBe(2);
     });
 });

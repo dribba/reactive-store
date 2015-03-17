@@ -115,7 +115,7 @@ ReactiveStore = function () {
     var that = {
         clearChildren: function(key) {
             _.each(_.keys(that.dump()), function(k) {
-                key !== k && _.startsWith(k, key) && (delete dict[k]);
+                key !== k && _.startsWith(k, key) && dict[k].deps.length === 0 && (delete dict[k]);
             });
         },
         set: function (key, val) {
