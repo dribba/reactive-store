@@ -66,4 +66,18 @@ describe('ReactiveStore.set', function() {
         expect(rs1.get('objArr.0.a')).toBe(1);
         expect(_.isArray(rs1.get('objArr'))).toBe(true);
     });
+
+    it('should clear keys when storing objects that do not exist anymore', function() {
+        rs1.set('obj', {a:1, b:2});
+        expect(rs1.get('obj')).toEqual({a:1, b:2});
+        rs1.set('obj', {a:1});
+        expect(rs1.get('obj')).toEqual({a:1});
+    });
+
+    it('should remove keys if an array is being updated', function() {
+        rs1.set('arr', [1,2,3]);
+        expect(rs1.get('arr')).toEqual([1,2,3]);
+        rs1.set('arr', [1,2]);
+        expect(rs1.get('arr')).toEqual([1,2]);
+    });
 });

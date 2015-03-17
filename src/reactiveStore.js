@@ -68,7 +68,8 @@ ReactiveStore = function () {
                 var propName = k.replace(key + '.', '');
                 var value = dict[k].value;
                 if(value !== undefined) {
-                    ret[k] = value;
+                    var idx = _.last(k.split('.'));
+                    ret.value[idx] = value;
                 }
                 return ret;
             }, {value:[], deps: dict[key].deps});
@@ -112,18 +113,25 @@ ReactiveStore = function () {
     }
 
     var that = {
+        clearChildren: function(key) {
+            _.each(_.keys(that.dump()), function(k) {
+                key !== k && _.startsWith(k, key) && (delete dict[k]);
+            });
+        },
         set: function (key, val) {
             debug && console.log('set('+key+', '+val+')');
             _.isPlainObject(val) ? setObject() : (_.isArray(val) ? setArray() : setValue());
 
 
             function setObject() {
+                that.clearChildren(key);
                 _.each(val, function(v, k) {
                     that.set(key+'.'+k, v);
                 });
             }
 
             function setArray() {
+                that.clearChildren(key);
                 _.each(val, function(v, idx) {
                     that.set(key+'.'+idx, v);
                 });
