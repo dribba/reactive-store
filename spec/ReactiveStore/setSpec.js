@@ -46,7 +46,7 @@ describe('ReactiveStore.set', function() {
         expect(rs1.dump()).toEqual({
             'o.value':'value',
             'o.a.value': 'another',
-            'o.object.something': 'something'
+            'o.object.something': 'something',
         });
     });
 
@@ -79,5 +79,19 @@ describe('ReactiveStore.set', function() {
         expect(rs1.get('arr')).toEqual([1,2,3]);
         rs1.set('arr', [1,2]);
         expect(rs1.get('arr')).toEqual([1,2]);
+    });
+
+    it('should be able to store an empty array', function() {
+        rs1.set('arr', []);
+        expect(rs1.get('arr')).toEqual([]);
+        rs1.set('arr',[1,2]);
+        expect(rs1.get('arr')).toEqual([1,2]);
+        rs1.set('arr', []);
+        expect(rs1.get('arr')).toEqual([]);
+    });
+
+    it('should be able to store an emtpy object', function() {
+        rs1.set('obj', {});
+        expect(rs1.get('obj')).toEqual({});
     });
 });

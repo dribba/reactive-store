@@ -128,6 +128,7 @@ ReactiveStore = function () {
                 _.each(val, function(v, k) {
                     that.set(key+'.'+k, v);
                 });
+                getFromDict(key).dflt = {};
             }
 
             function setArray() {
@@ -135,12 +136,14 @@ ReactiveStore = function () {
                 _.each(val, function(v, idx) {
                     that.set(key+'.'+idx, v);
                 });
+                getFromDict(key).dflt = [];
             }
 
             function setValue() {
                 var obj = getFromDict(key);
                 if(obj.value !== val) {
                     obj.value = val;
+                    obj.dflt = undefined;
                     notify(key);
                 }
             }
@@ -151,7 +154,7 @@ ReactiveStore = function () {
             var dep = Dependency();
             dep.depend();
             obj.deps.push(dep);
-            return isArray(obj.value) ? makeArray(obj.value) : obj.value;
+            return isArray(obj.value) ? makeArray(obj.value) : (obj.value !== undefined ? obj.value : obj.dflt);
 
             function isArray(v) {
                 return _.isPlainObject(v) && _.every(Object.keys(v), function(k) {
@@ -168,8 +171,10 @@ ReactiveStore = function () {
         dump: function() {
             return _.reduce(_.keys(dict), function(ret, key) {
                 var v = dict[key].value;
-                _.isDate(v) && (v = v.toISOString());
-                ret[key] = v;
+                if(v !== undefined) {
+                    _.isDate(v) && (v = v.toISOString());
+                    ret[key] = v;
+                }
                 return ret;
             }, {})
         },
