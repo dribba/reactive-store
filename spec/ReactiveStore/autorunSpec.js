@@ -93,4 +93,31 @@ describe('ReactiveStore.autorun()', function() {
         expect(valSpy.calls.count()).toBe(2);
         expect(aSpy.calls.count()).toBe(2);
     });
+
+    it('should still notify if empty array is stored', function() {
+        var spy = jasmine.createSpy();
+
+        rs1.set('arr', [1]);
+        rs1.autorun(function() {
+            spy();
+            rs1.get('arr');
+        });
+        expect(spy.calls.count()).toBe(1);
+        rs1.set('arr', []);
+        expect(spy.calls.count()).toBe(2);
+    });
+
+    it('should still notify if empty object is stored', function() {
+        var spy = jasmine.createSpy();
+
+        rs1.set('obj', {a:1});
+        rs1.autorun(function() {
+            spy();
+            rs1.get('obj');
+        });
+        expect(spy.calls.count()).toBe(1);
+        rs1.set('obj', {});
+        expect(spy.calls.count()).toBe(2);
+
+    });
 });

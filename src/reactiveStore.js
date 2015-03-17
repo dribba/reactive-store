@@ -129,6 +129,7 @@ ReactiveStore = function () {
                     that.set(key+'.'+k, v);
                 });
                 getFromDict(key).dflt = {};
+                _.keys(val).length === 0 && notify(key); // notify on empty object being stored
             }
 
             function setArray() {
@@ -137,6 +138,7 @@ ReactiveStore = function () {
                     that.set(key+'.'+idx, v);
                 });
                 getFromDict(key).dflt = [];
+                val.length === 0 && notify(key);    // notify if storing an empty array
             }
 
             function setValue() {
