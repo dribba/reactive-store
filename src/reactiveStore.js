@@ -12,7 +12,7 @@ ReactiveStore = function () {
         var that = {
             fn: fn,
             flush: function () {
-                _.some(deps, _fn.dot('invalid')) && that.run({});
+                _.some(deps, _fn.dot('invalid')) && that.run(false);
             },
             addDependency: function (dep) {
                 deps.indexOf(dep) === -1 && deps.push(dep);
@@ -191,10 +191,10 @@ ReactiveStore = function () {
         autorun: function (fn) {
             var ctx = _.find(contextList, {fn: fn});
             if (ctx) {
-                ctx.run({});
+                ctx.run(false);
             } else {
                 ctx = Context(fn);
-                ctx.run({firstRun: true});
+                ctx.run(true);
                 contextList.push(ctx);
             }
         },
