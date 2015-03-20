@@ -124,7 +124,6 @@ ReactiveStore = function () {
 
 
             function setObject() {
-                that.clearChildren(key);
                 _.each(val, function(v, k) {
                     that.set(key+'.'+k, v);
                 });
