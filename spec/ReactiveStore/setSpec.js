@@ -46,7 +46,7 @@ describe('ReactiveStore.set', function() {
         expect(rs1.dump()).toEqual({
             'o.value':'value',
             'o.a.value': 'another',
-            'o.object.something': 'something',
+            'o.object.something': 'something'
         });
     });
 
@@ -86,5 +86,11 @@ describe('ReactiveStore.set', function() {
     it('should be able to store an emtpy object', function() {
         rs1.set('obj', {});
         expect(rs1.get('obj')).toEqual({});
+    });
+
+    it('should be able to store an object with numeric keys', function() {
+        var obj = {'1':'One', '2':'Two'};
+        rs1.set('obj', obj);
+        expect(rs1.get('obj')).toEqual(obj);
     });
 });

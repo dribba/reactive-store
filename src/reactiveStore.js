@@ -77,6 +77,9 @@ ReactiveStore = function () {
 
         function object() {
             return _.reduce(keys, function (ret, k) {
+                if(k === key) {
+                    return ret;
+                }
                 var propName = k.replace(key + '.', '');
                 var value = dict[k].value;
                 if (value !== undefined) {
@@ -87,8 +90,9 @@ ReactiveStore = function () {
         }
 
         function isArray(keys) {
-            return _.every(keys, function(key) {
-                return /^[^\.]*\.[0-9]*$/.test(key);
+            return _.every(keys, function(key, idx) {
+                var itemIdx = key.replace(/^[^[\.]*\.([0-9]*)$/, '$1');
+                return itemIdx === idx + '';    // indexes are numeric and contiguous
             });
         }
     }
@@ -158,9 +162,10 @@ ReactiveStore = function () {
             return isArray(obj.value) ? makeArray(obj.value) : (obj.value !== undefined ? obj.value : obj.dflt);
 
             function isArray(v) {
-                return _.isPlainObject(v) && _.every(Object.keys(v), function(k) {
-                        return /^[0-9]*$/.test(k);
-                    })
+                return _.isPlainObject(v) && _.every(Object.keys(v), function(key, idx) {
+                    var itemIdx = key.replace(/^[^[\.]*\.([0-9]*)$/, '$1');
+                    return itemIdx === idx + '';    // indexes are numeric and contiguous
+                });
             }
             function makeArray(v) {
                 return _.reduce(v, function(ret, v, k) {
