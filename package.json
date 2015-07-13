@@ -2,7 +2,6 @@
   "name": "reactive-store",
   "version": "0.1.1",
   "devDependencies": {
-    "jasmine": "~2.3.1",
     "lodash": "~3.10.0",
     "browserify": "~10.2.6",
     "uglify": "~0.1.5",
