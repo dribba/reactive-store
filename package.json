@@ -1,20 +1,22 @@
 {
-  "name": "ReactiveStore",
-  "version": "0.1.0",
+  "name": "reactive-store",
+  "version": "0.1.1",
   "devDependencies": {
     "jasmine": "~2.3.1",
     "lodash": "~3.10.0",
     "browserify": "~10.2.6",
     "uglify": "~0.1.5",
-    "ramda": "~0.16.0",
-    "underscore": "~1.8.3"
+    "ramda": "~0.16.0"
   },
   "description": "A central reactive store",
   "main": "src/reactiveStore.js",
   "directories": {
     "test": "test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "~3.10.0",
+    "ramda": "~0.16.0"
+  },
   "scripts": {
     "test": "jasmine",
     "dist": "./scripts/dist.sh"
