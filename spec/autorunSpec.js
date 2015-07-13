@@ -87,13 +87,13 @@ describe('ReactiveStore.autorun()', function() {
             aSpy();
             rs1.get('val.a');
         });
-        expect(valSpy.calls.length).toBe(1);
-        expect(aSpy.calls.length).toBe(1);
+        expect(valSpy.calls.count()).toBe(1);
+        expect(aSpy.calls.count()).toBe(1);
         rs1.clearChildren('val');
-        expect(valSpy.calls.length).toBe(1);
+        expect(valSpy.calls.count()).toBe(1);
         rs1.set('val', {a:2});
-        expect(valSpy.calls.length).toBe(2);
-        expect(aSpy.calls.length).toBe(2);
+        expect(valSpy.calls.count()).toBe(2);
+        expect(aSpy.calls.count()).toBe(2);
     });
 
     it('should still notify if empty array is stored', function() {
@@ -104,9 +104,9 @@ describe('ReactiveStore.autorun()', function() {
             spy();
             rs1.get('arr');
         });
-        expect(spy.calls.length).toBe(1);
+        expect(spy.calls.count()).toBe(1);
         rs1.set('arr', []);
-        expect(spy.calls.length).toBe(2);
+        expect(spy.calls.count()).toBe(2);
     });
 
     it('should still notify if empty object is stored', function() {
@@ -117,9 +117,9 @@ describe('ReactiveStore.autorun()', function() {
             spy();
             rs1.get('obj');
         });
-        expect(spy.calls.length).toBe(1);
+        expect(spy.calls.count()).toBe(1);
         rs1.set('obj', {});
-        expect(spy.calls.length).toBe(2);
+        expect(spy.calls.count()).toBe(2);
     });
 
     it('should pass firstRun variable to autorun', function() {
@@ -130,8 +130,8 @@ describe('ReactiveStore.autorun()', function() {
         });
         rs1.set('foo', 'bar');
         rs1.set('foo', 'baz');
-        expect(spy.calls[0].args).toEqual([true]);
-        expect(spy.calls[1].args).toEqual([false]);
-        expect(spy.calls[2].args).toEqual([false]);
+        expect(spy.calls.argsFor(0)).toEqual([true]);
+        expect(spy.calls.argsFor(1)).toEqual([false]);
+        expect(spy.calls.argsFor(2)).toEqual([false]);
     });
 });
