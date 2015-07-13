@@ -227,4 +227,4 @@ ReactiveStore = function () {
     return that;
 };
 
-module && module.exports && (module.exports = ReactiveStore);
+module.exports = ReactiveStore;
