@@ -1,3 +1,6 @@
+_ = require('lodash');
+R = require('ramda');
+
 ReactiveStore = function () {
     "use strict";
     var currentContext;
@@ -12,7 +15,7 @@ ReactiveStore = function () {
         var that = {
             fn: fn,
             flush: function () {
-                _.some(deps, _fn.dot('invalid')) && that.run(false);
+                _.some(deps, R.prop('invalid')) && that.run(false);
             },
             addDependency: function (dep) {
                 deps.indexOf(dep) === -1 && deps.push(dep);
@@ -29,7 +32,9 @@ ReactiveStore = function () {
     }
 
     Context.flush = function () {
-        _fn.fmap(_fn.exec('flush'), contextList);
+        contextList.forEach(function(c) {
+            c.flush();
+        });
     };
 
     function Dependency() {
@@ -83,7 +88,7 @@ ReactiveStore = function () {
                 var propName = k.replace(key + '.', '');
                 var value = dict[k].value;
                 if (value !== undefined) {
-                    _fn.setProp(propName, ret.value, value);
+                    _.set(ret.value, propName, value);
                 }
                 return ret;
             }, {value: {}, deps: dict[key].deps});
@@ -221,3 +226,5 @@ ReactiveStore = function () {
     };
     return that;
 };
+
+module && module.exports && (module.exports = ReactiveStore);
