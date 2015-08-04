@@ -27,6 +27,7 @@
   <component name="IdProvider" IDEtalkID="134D18E623C675066140E5A4EED7D211" />
   <component name="JavaScriptLibraryMappings">
     <file url="file://$PROJECT_DIR$" libraries="{reactiveStore node_modules}" />
+    <includedPredefinedLibrary name="ECMAScript 6" />
   </component>
   <component name="Palette2">
     <group name="Swing">

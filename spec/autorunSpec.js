@@ -26,19 +26,20 @@ describe('ReactiveStore.autorun()', function() {
     });
 
     it('will notify for a change in value only once per change', function() {
-        var count = 0;
         var value;
-        rs1.autorun(function() {
-            value = rs1.get('something');
-            count++;
-        });
-        expect([count, value]).toEqual([1, undefined]);
+        var autorunSpy = jasmine.createSpy().and.callFake(function() {value = rs1.get('something')});
+        rs1.autorun(autorunSpy);
+        expect([autorunSpy.calls.count(), value]).toEqual([1, undefined]);
         rs1.set('something', 'a value');
-        expect([count, value]).toEqual([2, 'a value']);
+        expect([autorunSpy.calls.count(), value]).toEqual([2, 'a value']);
         rs1.set('something', 'another');
-        expect([count, value]).toEqual([3, 'another']);
+        expect([autorunSpy.calls.count(), value]).toEqual([3, 'another']);
         rs1.set('something', 'yet another');
-        expect([count, value]).toEqual([4, 'yet another']);
+        expect([autorunSpy.calls.count(), value]).toEqual([4, 'yet another']);
+
+        autorunSpy.calls.reset();
+        rs1.set('something', {foo:'foo', bar: 'bar'});
+        expect(autorunSpy.calls.count()).toBe(1);
     });
 
     it('will react to a change in a deeper value', function() {

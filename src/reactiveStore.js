@@ -1,7 +1,7 @@
-_ = require('lodash');
-R = require('ramda');
+var _ = require('lodash');
+var R = require('ramda');
 
-ReactiveStore = function () {
+var ReactiveStore = function () {
     "use strict";
     var currentContext;
     var dict = {};
