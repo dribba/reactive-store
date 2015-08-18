@@ -1,3 +1,5 @@
+_ = require('lodash');
+
 describe('ReactiveStore.set', function() {
     var rs1, rs2;
 

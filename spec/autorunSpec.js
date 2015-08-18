@@ -36,10 +36,6 @@ describe('ReactiveStore.autorun()', function() {
         expect([autorunSpy.calls.count(), value]).toEqual([3, 'another']);
         rs1.set('something', 'yet another');
         expect([autorunSpy.calls.count(), value]).toEqual([4, 'yet another']);
-
-        autorunSpy.calls.reset();
-        rs1.set('something', {foo:'foo', bar: 'bar'});
-        expect(autorunSpy.calls.count()).toBe(1);
     });
 
     it('will react to a change in a deeper value', function() {

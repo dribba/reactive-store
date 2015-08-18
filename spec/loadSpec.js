@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 describe('ReactiveStore.load()', function(){
     var rs;
     var dump;

@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var R = require('ramda');
 
-var ReactiveStore = function () {
+global.ReactiveStore = function () {
     "use strict";
     var currentContext;
     var dict = {};
@@ -124,7 +124,7 @@ var ReactiveStore = function () {
     var that = {
         clearChildren: function(key) {
             _.each(_.keys(that.dump()), function(k) {
-                key !== k && _.startsWith(k, key) && dict[k].deps.length === 0 && (delete dict[k]);
+                key !== k && _.startsWith(k, key) && (dict[k].deps.length === 0 ? (delete dict[k]) : dict[k].value = undefined);
             });
         },
         set: function (key, val) {
