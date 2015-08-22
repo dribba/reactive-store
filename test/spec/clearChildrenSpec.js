@@ -1,3 +1,6 @@
+var ReactiveStore = require('ReactiveStore');
+
+
 describe('ReactiveStore.clearChildren()', function() {
     var rs1;
 

@@ -1,3 +1,6 @@
+var ReactiveStore = require('ReactiveStore');
+
+
 describe('ReactiveStore.debug', function() {
     var rs;
     var logSpy;

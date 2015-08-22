@@ -1,3 +1,5 @@
+var ReactiveStore = require('ReactiveStore');
+
 describe('ReactiveStore.nonReactive', function() {
     var rs;
     var spy;

@@ -1,3 +1,6 @@
+var ReactiveStore = require('ReactiveStore');
+
+
 describe('ReactiveStore.dump()', function() {
     var rs;
     var date = new Date();

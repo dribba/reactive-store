@@ -1,3 +1,5 @@
+var path = require('path');
+
 // webpack.config.js
 module.exports = {
     entry: './src/reactiveStore.js',
@@ -9,10 +11,6 @@ module.exports = {
             { test: /\.js$/, loader: 'babel-loader' }
         ]
     },
-    devtool: "#inline-source-map",
-    resolve: {
-        alias: {
-        }
-    }
+    devtool: "#inline-source-map"
 };
 

@@ -1,3 +1,6 @@
+var ReactiveStore = require('ReactiveStore');
+
+
 var _ = require('lodash');
 
 describe('ReactiveStore.get()', function() {

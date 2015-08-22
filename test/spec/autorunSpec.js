@@ -1,4 +1,4 @@
-ReactiveStore = require('..');
+var ReactiveStore = require('ReactiveStore');
 
 describe('ReactiveStore.autorun()', function() {
     var rs1;
