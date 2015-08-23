@@ -121,6 +121,10 @@ function ReactiveStore() {
         });
     }
 
+    function convertToDotNotation(key) {
+        return key.replace(/\[([0-9]*)\]/g, '.$1'); // replace [] array syntax with dot notation
+    }
+
     var that = {
         clearChildren: function(key) {
             _.each(_.keys(that.dump()), function(k) {
@@ -129,6 +133,7 @@ function ReactiveStore() {
         },
         set: function (key, val) {
             debug && console.log('set('+key+', '+val+')');
+            key = convertToDotNotation(key);
             _.isPlainObject(val) ? setObject() : (_.isArray(val) ? setArray() : setValue());
 
 
@@ -160,6 +165,7 @@ function ReactiveStore() {
         },
         get: function (key) {
             debug && console.log('get('+key+')');
+            key = convertToDotNotation(key);
             var obj = getFromDict(key);
             var dep = Dependency();
             dep.depend();
