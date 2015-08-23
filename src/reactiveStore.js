@@ -133,6 +133,9 @@ function ReactiveStore() {
         },
         set: function (key, val) {
             debug && console.log('set('+key+', '+val+')');
+            if(key === undefined) {
+                throw new Error("Can not get value of undefined key");
+            }
             key = convertToDotNotation(key);
             _.isPlainObject(val) ? setObject() : (_.isArray(val) ? setArray() : setValue());
 
@@ -165,6 +168,9 @@ function ReactiveStore() {
         },
         get: function (key) {
             debug && console.log('get('+key+')');
+            if(key === undefined) {
+                throw new Error("Can not get value of undefined key");
+            }
             key = convertToDotNotation(key);
             var obj = getFromDict(key);
             var dep = Dependency();
