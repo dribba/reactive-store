@@ -4,4 +4,4 @@
 node_modules
 _SpecRunner.html
 build
-
+test/tests.js

@@ -8,26 +8,21 @@ describe('ReactiveStore.autorun()', function() {
     });
 
     it('will only trigger autorun on the key being changed', function() {
-        var a, b, aCount=0, bCount=0;
-        rs1.autorun(function() {
-            a = rs1.get('a');
-            aCount++;
-        });
-        rs1.autorun(function() {
-            b = rs1.get('b');
-            bCount++;
-        });
+        var aSpy = jasmine.createSpy().and.callFake(() => rs1.get('a'));
+        var bSpy = jasmine.createSpy().and.callFake(() => rs1.get('b'));
+        rs1.autorun(aSpy);
+        rs1.autorun(bSpy);
 
-        expect([aCount, bCount]).toEqual([1,1]);
+        expect([aSpy.calls.count(), bSpy.calls.count()]).toEqual([1,1]);
         rs1.set('a', 1);
-        expect([aCount, bCount]).toEqual([2,1]);
+        expect([aSpy.calls.count(), bSpy.calls.count()]).toEqual([2,1]);
         rs1.set('b', 1);
-        expect([aCount, bCount]).toEqual([2,2]);
+        expect([aSpy.calls.count(), bSpy.calls.count()]).toEqual([2,2]);
     });
 
     it('will notify for a change in value only once per change', function() {
         var value;
-        var autorunSpy = jasmine.createSpy().and.callFake(function() {value = rs1.get('something')});
+        var autorunSpy = jasmine.createSpy().and.callFake(() => value = rs1.get('something'));
         rs1.autorun(autorunSpy);
         expect([autorunSpy.calls.count(), value]).toEqual([1, undefined]);
         rs1.set('something', 'a value');
@@ -130,5 +125,23 @@ describe('ReactiveStore.autorun()', function() {
         expect(spy.calls.argsFor(0)).toEqual([true]);
         expect(spy.calls.argsFor(1)).toEqual([false]);
         expect(spy.calls.argsFor(2)).toEqual([false]);
+    });
+
+    it('should only notify once for object changes', () => {
+        var spy = jasmine.createSpy().and.callFake(() => rs1.get('foo'));
+        rs1.autorun(spy);
+
+        expect(spy.calls.count()).toBe(1);
+        rs1.set('foo', {bar:1,baz:2, boo: 3});
+        expect(spy.calls.count()).toBe(2);
+    });
+
+    it('should only notify once for an array change', () => {
+        var spy = jasmine.createSpy().and.callFake(() => rs1.get('foo'));
+        rs1.autorun(spy);
+
+        expect(spy.calls.count()).toBe(1);
+        rs1.set('foo', [{bar:1},{bar:2},{bar:3}]);
+        expect(spy.calls.count()).toBe(2);
     });
 });
