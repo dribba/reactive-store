@@ -9,7 +9,7 @@ function ReactiveStore() {
 
     var contextList = [];
 
-    function Context(fn) {
+    function ReactiveContext(fn) {
         var deps = [];
 
         var that = {
@@ -31,17 +31,15 @@ function ReactiveStore() {
         return that;
     }
 
-    Context.flush = function () {
-        contextList.forEach(function(c) {
-            c.flush();
-        });
+    ReactiveContext.flushAll = function () {
+        contextList.forEach(c => c.flush());
     };
 
     function Dependency() {
         var that = {
             changed: function () {
                 that.invalid = true;
-                Context.flush();
+                ReactiveContext.flushAll();
             },
             depend: function () {
                 currentContext && currentContext.addDependency(that);
@@ -102,24 +100,37 @@ function ReactiveStore() {
         }
     }
 
-    function notify(key) {
-        var deps = [];
-        while(key.length) {
-            if(dict[key]) {
-                deps = deps.concat(dict[key].deps);
-                dict[key].deps = [];
-            }
-            if(key.indexOf('.') !== -1) {
-                key = key.replace(/\.[^\.]*$/, '');
-            } else {
-                key = '';
+
+    function Notifier() {
+        var keysToNotify = new Set();
+
+        return {
+            add(key) {
+                keysToNotify.add(key);
+            },
+            flush() {
+                var deps = new Set();
+                var keys = keysToNotify;
+                keysToNotify = new Set();
+
+                Array.from(keys).forEach(getDeps);
+                Array.from(deps).forEach(dep => dep.changed());
+
+                function getDeps(key) {
+                    while(key.length) {
+                        dict[key]  && Array.from(dict[key].deps).forEach(deps.add.bind(deps));
+                        if(key.indexOf('.') !== -1) {
+                            key = key.replace(/\.[^\.]*$/, '');
+                        } else {
+                            key = '';
+                        }
+                    }
+
+                }
             }
         }
-
-        _.each(deps, function(dep) {
-            dep.changed();
-        });
     }
+
 
     function convertToDotNotation(key) {
         return key.replace(/\[([0-9]*)\]/g, '.$1'); // replace [] array syntax with dot notation
@@ -132,37 +143,43 @@ function ReactiveStore() {
             });
         },
         set: function (key, val) {
-            debug && console.log('set('+key+', '+val+')');
-            if(key === undefined) {
-                throw new Error("Can not get value of undefined key");
-            }
-            key = convertToDotNotation(key);
-            _.isPlainObject(val) ? setObject() : (_.isArray(val) ? setArray() : setValue());
+            debug && console.log('set(' + key + ', ' + val + ')');
+            var notifier = Notifier();
+            set(key,val);
+            notifier.flush();
 
+            function set(key, val) {
+                if (key === undefined) {
+                    throw new Error("Can not get value of undefined key");
+                }
+                key = convertToDotNotation(key);
 
-            function setObject() {
-                _.each(val, function(v, k) {
-                    that.set(key+'.'+k, v);
-                });
-                getFromDict(key).dflt = {};
-                _.keys(val).length === 0 && notify(key); // notify on empty object being stored
-            }
+                _.isPlainObject(val) ? setObject() : (_.isArray(val) ? setArray() : setValue());
 
-            function setArray() {
-                that.clearChildren(key);
-                _.each(val, function(v, idx) {
-                    that.set(key+'.'+idx, v);
-                });
-                getFromDict(key).dflt = [];
-                val.length === 0 && notify(key);    // notify if storing an empty array
-            }
+                function setObject() {
+                    _.each(val, function (v, k) {
+                        set(`${key}.${k}`, v);
+                    });
+                    getFromDict(key).dflt = {};
+                    _.keys(val).length === 0 && notifier.add(key); // notify on empty object being stored
+                }
 
-            function setValue() {
-                var obj = getFromDict(key);
-                if(obj.value !== val) {
-                    obj.value = val;
-                    obj.dflt = undefined;
-                    notify(key);
+                function setArray() {
+                    that.clearChildren(key);
+                    _.each(val, function (v, idx) {
+                        set(key + '.' + idx, v);
+                    });
+                    getFromDict(key).dflt = [];
+                    val.length === 0 && notifier.add(key);    // notify if storing an empty array
+                }
+
+                function setValue() {
+                    var obj = getFromDict(key);
+                    if (obj.value !== val) {
+                        obj.value = val;
+                        obj.dflt = undefined;
+                        notifier.add(key);
+                    }
                 }
             }
         },
@@ -173,9 +190,13 @@ function ReactiveStore() {
             }
             key = convertToDotNotation(key);
             var obj = getFromDict(key);
-            var dep = Dependency();
-            dep.depend();
-            obj.deps.push(dep);
+
+            if(currentContext) {
+                var dep = Dependency();
+                dep.depend();
+                obj.deps.push(dep);
+            }
+
             return isArray(obj.value) ? makeArray(obj.value) : (obj.value !== undefined ? obj.value : obj.dflt);
 
             function isArray(v) {
@@ -214,7 +235,7 @@ function ReactiveStore() {
             if (ctx) {
                 ctx.run(false);
             } else {
-                ctx = Context(fn);
+                ctx = ReactiveContext(fn);
                 ctx.run(true);
                 contextList.push(ctx);
             }
