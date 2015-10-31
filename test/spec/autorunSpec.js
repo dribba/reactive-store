@@ -134,6 +134,8 @@ describe('ReactiveStore.autorun()', function() {
         expect(spy.calls.count()).toBe(1);
         rs1.set('foo', {bar:1,baz:2, boo: 3});
         expect(spy.calls.count()).toBe(2);
+        rs1.set('foo.bar', 10);
+        expect(spy.calls.count()).toBe(3);
     });
 
     it('should only notify once for an array change', () => {
