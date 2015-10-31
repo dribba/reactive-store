@@ -127,6 +127,16 @@ describe('ReactiveStore.autorun()', function() {
         expect(spy.calls.argsFor(2)).toEqual([false]);
     });
 
+    it('should remember spys that exist on an object even if the object does not exist yet', () => {
+        var spy = jasmine.createSpy().and.callFake(() => rs1.get('foo.bar'));
+        rs1.autorun(spy);
+
+        expect(spy.calls.count()).toBe(1);
+
+        rs1.set('foo', {bar:1,baz:2, boo: 3});
+        expect(spy.calls.count()).toBe(2);
+    });
+
     it('should only notify once for object changes', () => {
         var spy = jasmine.createSpy().and.callFake(() => rs1.get('foo'));
         rs1.autorun(spy);
@@ -143,6 +153,7 @@ describe('ReactiveStore.autorun()', function() {
         rs1.autorun(spy);
 
         expect(spy.calls.count()).toBe(1);
+
         rs1.set('foo', [{bar:1},{bar:2},{bar:3}]);
         expect(spy.calls.count()).toBe(2);
     });
