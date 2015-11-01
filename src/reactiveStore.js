@@ -10,55 +10,6 @@ function ReactiveStore() {
     var dict = Dict();
     var debug;
 
-    function getFromDict(key, dflt) {
-        var keys = _.keys(dict).filter(k => k === key || k.startsWith(`${key}.`));
-
-        if (keys.length === 0) {
-            return dict[key] = {value: dflt, deps: []};
-        }
-
-        if (keys.length === 1 && keys[0] === key) {
-            return dict[key];
-        }
-
-        dict[key] = dict[key] || {value: undefined, deps: []};  // Need this to have a deps for this key
-
-        return isArray(keys) ? array() : object();
-
-
-        function array() {
-            return _.reduce(keys, function(ret, k) {
-                var propName = k.replace(key + '.', '');
-                var value = dict[k].value;
-                if(value !== undefined) {
-                    var idx = _.last(k.split('.'));
-                    ret.value[idx] = value;
-                }
-                return ret;
-            }, {value:[], deps: dict[key].deps});
-        }
-
-        function object() {
-            return _.reduce(keys, function (ret, k) {
-                if(k === key) {
-                    return ret;
-                }
-                var propName = k.replace(key + '.', '');
-                var value = dict[k].value;
-                if (value !== undefined) {
-                    _.set(ret.value, propName, value);
-                }
-                return ret;
-            }, {value: {}, deps: dict[key].deps});
-        }
-
-        function isArray(keys) {
-            return _.every(keys, function(key, idx) {
-                var itemIdx = key.replace(/^[^[\.]*\.([0-9]*)$/, '$1');
-                return itemIdx === idx + '';    // indexes are numeric and contiguous
-            });
-        }
-    }
 
     function convertToDotNotation(key) {
         return key.replace(/\[([0-9]*)\]/g, '.$1'); // replace [] array syntax with dot notation
@@ -88,7 +39,7 @@ function ReactiveStore() {
                     _.each(val, function (v, k) {
                         set(`${key}.${k}`, v);
                     });
-                    getFromDict(key).dflt = {};
+                    dict.getFromDict(key).dflt = {};
                     _.keys(val).length === 0 && notifier.add(key); // notify on empty object being stored
                 }
 
@@ -97,12 +48,12 @@ function ReactiveStore() {
                     _.each(val, function (v, idx) {
                         set(key + '.' + idx, v);
                     });
-                    getFromDict(key).dflt = [];
+                    dict.getFromDict(key).dflt = [];
                     val.length === 0 && notifier.add(key);    // notify if storing an empty array
                 }
 
                 function setValue() {
-                    var obj = getFromDict(key);
+                    var obj = dict.getFromDict(key);
                     if (obj.value !== val) {
                         obj.value = val;
                         obj.dflt = undefined;
@@ -117,7 +68,7 @@ function ReactiveStore() {
                 throw new Error("Can not get value of undefined key");
             }
             key = convertToDotNotation(key);
-            var obj = getFromDict(key);
+            var obj = dict.getFromDict(key);
 
             if(ReactiveContext.current) {
                 var dep = Dependency();
