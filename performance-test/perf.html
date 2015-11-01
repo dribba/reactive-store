@@ -8,22 +8,22 @@
 <body>
     <h1>Performance test</h1>
 <script>
-    time(addItems.bind(null, 100));
-    time(addObject.bind(null, 100));
-    time(addItems.bind(null, 10000));
+    for (var i = 10;i--;) {
+        console.log(Object.keys(RS.dump()).length + ' items in store');
+        time(addObject.bind(null, 10));
+        time(addObject.bind(null, 100));
+        time(function() {
+            RS.set('another key'+i, 'some value');
+            return 'add another key';
+        });
 
-    time(function() {
-        RS.set('another key1', 'some value');
-        return 'add another key';
-    });
-
-    time(function() {
-        RS.get('another key1');
-        return 'get another key';
-    });
-
-    time(addObject.bind(null, 10));
-    time(addObject.bind(null, 100));
+        time(function() {
+            RS.get('another key'+i);
+            return 'get another key';
+        });
+        addItems(1000);
+        console.log('-------------------------------');
+    }
 
     function uniq() {
         uniq.count = uniq.count || 0;
@@ -49,7 +49,7 @@
             obj['key'+i] = 'some value';
         }
         RS.set('object', obj);
-        return 'add large object with '+numOfKeys+' keys';
+        return 'add object with '+numOfKeys+' keys';
     }
 
 </script>
