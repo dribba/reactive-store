@@ -15,7 +15,8 @@ module.exports = function Notifier(dict) {
 
             function getDeps(key) {
                 while(key.length) {
-                    dict[key]  && Array.from(dict[key].deps).forEach(deps.add.bind(deps));
+                    var dictEntry = dict.get(key);
+                    dictEntry  && Array.from(dictEntry.deps).forEach(deps.add.bind(deps));
                     if(key.indexOf('.') !== -1) {
                         key = key.replace(/\.[^\.]*$/, '');
                     } else {
