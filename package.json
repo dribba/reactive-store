@@ -1,6 +1,6 @@
 {
   "name": "reactive-store",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "A central reactive store",
   "main": "src/reactiveStore.js",
   "directories": {
