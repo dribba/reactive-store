@@ -48,7 +48,7 @@
     function addObject(numOfKeys) {
         var obj = {};
         for (var i = numOfKeys; i--;) {
-            obj['key' + i] = 'some value';
+            obj[i+'.key'] = 'some value';
         }
         RS.set('object', obj);
         return 'add object with ' + numOfKeys + ' keys';
