@@ -1,4 +1,4 @@
-var ReactiveStore = require('ReactiveStore');
+var ReactiveStore = require('src/ReactiveStore');
 var _ = require('lodash');
 
 describe('ReactiveStore.set', function() {
@@ -46,10 +46,10 @@ describe('ReactiveStore.set', function() {
             }
         }
         rs1.set('o', obj);
-        expect(rs1.dump()).toEqual({
-            'o.value':'value',
-            'o.a.value': 'another',
-            'o.object.something': 'something'
+        expect(rs1.get('o')).toEqual({
+            value: 'value',
+            a: {value: 'another'},
+            object: {something: 'something'}
         });
     });
 

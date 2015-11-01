@@ -1,4 +1,4 @@
-var ReactiveStore = require('ReactiveStore');
+var ReactiveStore = require('src/ReactiveStore');
 
 
 var _ = require('lodash');

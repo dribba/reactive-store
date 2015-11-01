@@ -15,15 +15,13 @@ module.exports = function Notifier(dict) {
 
             function getDeps(key) {
                 while(key.length) {
-                    var dictEntry = dict.get(key);
-                    dictEntry  && Array.from(dictEntry.deps).forEach(deps.add.bind(deps));
+                    dict.getDependencies(key).forEach(deps.add.bind(deps));
                     if(key.indexOf('.') !== -1) {
                         key = key.replace(/\.[^\.]*$/, '');
                     } else {
                         key = '';
                     }
                 }
-
             }
         }
     }

@@ -1,1 +1,1 @@
-global.ReactiveStore = require('./reactiveStore');
+global.ReactiveStore = require('./ReactiveStore');

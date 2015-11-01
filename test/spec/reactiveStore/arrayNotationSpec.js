@@ -1,4 +1,4 @@
-var ReactiveStore = require('ReactiveStore');
+var ReactiveStore = require('src/ReactiveStore');
 
 describe('array notation keys', () => {
     var rs;
@@ -9,6 +9,7 @@ describe('array notation keys', () => {
 
     describe('set()', () => {
         it('should accept array notation', () => {
+window.store = rs.raw();
             rs.set('a[1].b.c[2]', 10);
             expect(rs.get('a.1.b.c.2')).toBe(10);
         });
