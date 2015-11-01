@@ -2,40 +2,12 @@ var _ = require('lodash');
 var R = require('ramda');
 var Dict = require('./Dict');
 var Notifier = require('./Notifier');
+var ReactiveContext = require('./ReactiveContext');
 
 function ReactiveStore() {
     "use strict";
-    var currentContext;
-    var dict = new Dict();
+    var dict = Dict();
     var debug;
-
-    var contextList = [];
-
-    function ReactiveContext(fn) {
-        var deps = [];
-
-        var that = {
-            fn: fn,
-            flush: function () {
-                _.some(deps, R.prop('invalid')) && that.run(false);
-            },
-            addDependency: function (dep) {
-                deps.indexOf(dep) === -1 && deps.push(dep);
-            },
-            run: function (opts) {
-                deps = [];
-                var prevContext = currentContext;
-                currentContext = that;
-                fn(opts);
-                currentContext = prevContext;
-            }
-        };
-        return that;
-    }
-
-    ReactiveContext.flushAll = function () {
-        contextList.forEach(c => c.flush());
-    };
 
     function Dependency() {
         var that = {
@@ -44,7 +16,7 @@ function ReactiveStore() {
                 ReactiveContext.flushAll();
             },
             depend: function () {
-                currentContext && currentContext.addDependency(that);
+                ReactiveContext.current && ReactiveContext.current.addDependency(that);
             }
         };
         return that;
@@ -159,7 +131,7 @@ function ReactiveStore() {
             key = convertToDotNotation(key);
             var obj = getFromDict(key);
 
-            if(currentContext) {
+            if(ReactiveContext.current) {
                 var dep = Dependency();
                 dep.depend();
                 obj.deps.push(dep);
@@ -190,21 +162,21 @@ function ReactiveStore() {
         },
 
         autorun: function (fn) {
-            var ctx = _.find(contextList, {fn: fn});
+            var ctx = _.find(ReactiveContext.list, {fn: fn});
             if (ctx) {
                 ctx.run(false);
             } else {
                 ctx = ReactiveContext(fn);
                 ctx.run(true);
-                contextList.push(ctx);
+                ReactiveContext.list.push(ctx);
             }
         },
 
         nonReactive: function(fn) {
-            var prevContext = currentContext;
-            currentContext = undefined;
+            var prevContext = ReactiveContext.current;
+            ReactiveContext.current = undefined;
             fn();
-            currentContext = prevContext;
+            ReactiveContext.current = prevContext;
         },
 
         debug: {
