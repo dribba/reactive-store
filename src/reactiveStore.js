@@ -3,24 +3,12 @@ var R = require('ramda');
 var Dict = require('./Dict');
 var Notifier = require('./Notifier');
 var ReactiveContext = require('./ReactiveContext');
+var Dependency = require('./Dependency');
 
 function ReactiveStore() {
     "use strict";
     var dict = Dict();
     var debug;
-
-    function Dependency() {
-        var that = {
-            changed: function () {
-                that.invalid = true;
-                ReactiveContext.flushAll();
-            },
-            depend: function () {
-                ReactiveContext.current && ReactiveContext.current.addDependency(that);
-            }
-        };
-        return that;
-    }
 
     function getFromDict(key, dflt) {
         var keys = _.keys(dict).filter(k => k === key || k.startsWith(`${key}.`));
