@@ -1,10 +1,12 @@
 var _ = require('lodash');
 var R = require('ramda');
+var Dict = require('./Dict');
+var Notifier = require('./Notifier');
 
 function ReactiveStore() {
     "use strict";
     var currentContext;
-    var dict = {};
+    var dict = new Dict();
     var debug;
 
     var contextList = [];
@@ -49,9 +51,7 @@ function ReactiveStore() {
     }
 
     function getFromDict(key, dflt) {
-        var keys = _.filter(_.keys(dict), function (k) {
-            return k === key || k.indexOf(key + '.') === 0;
-        });
+        var keys = _.keys(dict).filter(k => k === key || k.startsWith(`${key}.`));
 
         if (keys.length === 0) {
             return dict[key] = {value: dflt, deps: []};
@@ -100,38 +100,6 @@ function ReactiveStore() {
         }
     }
 
-
-    function Notifier() {
-        var keysToNotify = new Set();
-
-        return {
-            add(key) {
-                keysToNotify.add(key);
-            },
-            flush() {
-                var deps = new Set();
-                var keys = keysToNotify;
-                keysToNotify = new Set();
-
-                Array.from(keys).forEach(getDeps);
-                Array.from(deps).forEach(dep => dep.changed());
-
-                function getDeps(key) {
-                    while(key.length) {
-                        dict[key]  && Array.from(dict[key].deps).forEach(deps.add.bind(deps));
-                        if(key.indexOf('.') !== -1) {
-                            key = key.replace(/\.[^\.]*$/, '');
-                        } else {
-                            key = '';
-                        }
-                    }
-
-                }
-            }
-        }
-    }
-
-
     function convertToDotNotation(key) {
         return key.replace(/\[([0-9]*)\]/g, '.$1'); // replace [] array syntax with dot notation
     }
@@ -144,7 +112,7 @@ function ReactiveStore() {
         },
         set: function (key, val) {
             debug && console.log('set(' + key + ', ' + val + ')');
-            var notifier = Notifier();
+            var notifier = Notifier(dict);
             set(key,val);
             notifier.flush();
 
