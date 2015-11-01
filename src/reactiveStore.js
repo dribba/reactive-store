@@ -10,7 +10,6 @@ function ReactiveStore() {
     var dict = Dict();
     var debug;
 
-
     function convertToDotNotation(key) {
         return key.replace(/\[([0-9]*)\]/g, '.$1'); // replace [] array syntax with dot notation
     }
@@ -100,23 +99,8 @@ function ReactiveStore() {
             });
         },
 
-        autorun: function (fn) {
-            var ctx = _.find(ReactiveContext.list, {fn: fn});
-            if (ctx) {
-                ctx.run(false);
-            } else {
-                ctx = ReactiveContext(fn);
-                ctx.run(true);
-                ReactiveContext.list.push(ctx);
-            }
-        },
-
-        nonReactive: function(fn) {
-            var prevContext = ReactiveContext.current;
-            ReactiveContext.current = undefined;
-            fn();
-            ReactiveContext.current = prevContext;
-        },
+        autorun: ReactiveContext.autorun,
+        nonReactive: ReactiveContext.nonReactive,
 
         debug: {
             on: function() {

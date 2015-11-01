@@ -20,10 +20,29 @@ var ReactiveContext = module.exports = function(fn) {
         }
     };
     return that;
-}
+};
 
 ReactiveContext.flushAll = function () {
     ReactiveContext.list.forEach(c => c.flush());
 };
+
+ReactiveContext.autorun = function (fn) {
+    var ctx = _.find(ReactiveContext.list, {fn: fn});
+    if (ctx) {
+        ctx.run(false);
+    } else {
+        ctx = ReactiveContext(fn);
+        ctx.run(true);
+        ReactiveContext.list.push(ctx);
+    }
+};
+
+ReactiveContext.nonReactive = function(fn) {
+    var prevContext = ReactiveContext.current;
+    ReactiveContext.current = undefined;
+    fn();
+    ReactiveContext.current = prevContext;
+};
+
 
 ReactiveContext.list = [];
