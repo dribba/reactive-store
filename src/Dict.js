@@ -1,11 +1,9 @@
-module.exports = function() {
+module.exports = () => {
     var that = {};
 
-    that.delete = function(key) {
-        delete that[key]
-    };
+    that.delete = key => delete that[key];
 
-    that.dump = function() {
+    that.dump = () => {
         return _.reduce(_.keys(that), function(ret, key) {
             var v = that[key].value;
             if(v !== undefined) {
@@ -16,11 +14,9 @@ module.exports = function() {
         }, {})
     };
 
-    that.setDefaultValue = function(key, dflt) {
-        that.get(key).dflt = dflt;
-    };
+    that.setDefaultValue = (key, dflt) => that.get(key).dflt = dflt;
 
-    that.get = function(key, dflt) {
+    that.get = (key, dflt) => {
         var dict = that;
         var keys = _.keys(dict).filter(k => k === key || k.startsWith(`${key}.`));
 
