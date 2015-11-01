@@ -1,136 +1,14 @@
 var _ = require('lodash');
 var R = require('ramda');
+var Dict = require('./Dict');
+var Notifier = require('./Notifier');
+var ReactiveContext = require('./ReactiveContext');
+var Dependency = require('./Dependency');
 
 function ReactiveStore() {
     "use strict";
-    var currentContext;
-    var dict = {};
+    var dict = Dict();
     var debug;
-
-    var contextList = [];
-
-    function ReactiveContext(fn) {
-        var deps = [];
-
-        var that = {
-            fn: fn,
-            flush: function () {
-                _.some(deps, R.prop('invalid')) && that.run(false);
-            },
-            addDependency: function (dep) {
-                deps.indexOf(dep) === -1 && deps.push(dep);
-            },
-            run: function (opts) {
-                deps = [];
-                var prevContext = currentContext;
-                currentContext = that;
-                fn(opts);
-                currentContext = prevContext;
-            }
-        };
-        return that;
-    }
-
-    ReactiveContext.flushAll = function () {
-        contextList.forEach(c => c.flush());
-    };
-
-    function Dependency() {
-        var that = {
-            changed: function () {
-                that.invalid = true;
-                ReactiveContext.flushAll();
-            },
-            depend: function () {
-                currentContext && currentContext.addDependency(that);
-            }
-        };
-        return that;
-    }
-
-    function getFromDict(key, dflt) {
-        var keys = _.filter(_.keys(dict), function (k) {
-            return k === key || k.indexOf(key + '.') === 0;
-        });
-
-        if (keys.length === 0) {
-            return dict[key] = {value: dflt, deps: []};
-        }
-
-        if (keys.length === 1 && keys[0] === key) {
-            return dict[key];
-        }
-
-        dict[key] = dict[key] || {value: undefined, deps: []};  // Need this to have a deps for this key
-
-        return isArray(keys) ? array() : object();
-
-
-        function array() {
-            return _.reduce(keys, function(ret, k) {
-                var propName = k.replace(key + '.', '');
-                var value = dict[k].value;
-                if(value !== undefined) {
-                    var idx = _.last(k.split('.'));
-                    ret.value[idx] = value;
-                }
-                return ret;
-            }, {value:[], deps: dict[key].deps});
-        }
-
-        function object() {
-            return _.reduce(keys, function (ret, k) {
-                if(k === key) {
-                    return ret;
-                }
-                var propName = k.replace(key + '.', '');
-                var value = dict[k].value;
-                if (value !== undefined) {
-                    _.set(ret.value, propName, value);
-                }
-                return ret;
-            }, {value: {}, deps: dict[key].deps});
-        }
-
-        function isArray(keys) {
-            return _.every(keys, function(key, idx) {
-                var itemIdx = key.replace(/^[^[\.]*\.([0-9]*)$/, '$1');
-                return itemIdx === idx + '';    // indexes are numeric and contiguous
-            });
-        }
-    }
-
-
-    function Notifier() {
-        var keysToNotify = new Set();
-
-        return {
-            add(key) {
-                keysToNotify.add(key);
-            },
-            flush() {
-                var deps = new Set();
-                var keys = keysToNotify;
-                keysToNotify = new Set();
-
-                Array.from(keys).forEach(getDeps);
-                Array.from(deps).forEach(dep => dep.changed());
-
-                function getDeps(key) {
-                    while(key.length) {
-                        dict[key]  && Array.from(dict[key].deps).forEach(deps.add.bind(deps));
-                        if(key.indexOf('.') !== -1) {
-                            key = key.replace(/\.[^\.]*$/, '');
-                        } else {
-                            key = '';
-                        }
-                    }
-
-                }
-            }
-        }
-    }
-
 
     function convertToDotNotation(key) {
         return key.replace(/\[([0-9]*)\]/g, '.$1'); // replace [] array syntax with dot notation
@@ -139,12 +17,13 @@ function ReactiveStore() {
     var that = {
         clearChildren: function(key) {
             _.each(_.keys(that.dump()), function(k) {
-                key !== k && _.startsWith(k, key) && (dict[k].deps.length === 0 ? (delete dict[k]) : dict[k].value = undefined);
+                var obj = dict.get(k)
+                key !== k && _.startsWith(k, key) && (obj.deps.length === 0 ? (dict.delete(k)) : obj.value = undefined);
             });
         },
         set: function (key, val) {
             debug && console.log('set(' + key + ', ' + val + ')');
-            var notifier = Notifier();
+            var notifier = Notifier(dict);
             set(key,val);
             notifier.flush();
 
@@ -160,7 +39,7 @@ function ReactiveStore() {
                     _.each(val, function (v, k) {
                         set(`${key}.${k}`, v);
                     });
-                    getFromDict(key).dflt = {};
+                    dict.setDefaultValue(key, {});
                     _.keys(val).length === 0 && notifier.add(key); // notify on empty object being stored
                 }
 
@@ -169,12 +48,12 @@ function ReactiveStore() {
                     _.each(val, function (v, idx) {
                         set(key + '.' + idx, v);
                     });
-                    getFromDict(key).dflt = [];
+                    dict.setDefaultValue(key, []);
                     val.length === 0 && notifier.add(key);    // notify if storing an empty array
                 }
 
                 function setValue() {
-                    var obj = getFromDict(key);
+                    var obj = dict.get(key);
                     if (obj.value !== val) {
                         obj.value = val;
                         obj.dflt = undefined;
@@ -189,9 +68,9 @@ function ReactiveStore() {
                 throw new Error("Can not get value of undefined key");
             }
             key = convertToDotNotation(key);
-            var obj = getFromDict(key);
+            var obj = dict.get(key);
 
-            if(currentContext) {
+            if(ReactiveContext.current) {
                 var dep = Dependency();
                 dep.depend();
                 obj.deps.push(dep);
@@ -212,41 +91,17 @@ function ReactiveStore() {
                 }, []);
             }
         },
-        dump: function() {
-            return _.reduce(_.keys(dict), function(ret, key) {
-                var v = dict[key].value;
-                if(v !== undefined) {
-                    _.isDate(v) && (v = v.toISOString());
-                    ret[key] = v;
-                }
-                return ret;
-            }, {})
-        },
+        dump: dict.dump,
 
         load: function(obj) {
             _.each(obj, function(v, k) {
                 /(\d{4})-(\d{2})-(\d{2})T(\d{2})\:(\d{2})\:(\d{2})/.test(v) && (v = new Date(v));
-                dict[k] = {value: v, deps:[]};
+                dict.set(k, {value: v, deps:[]});
             });
         },
 
-        autorun: function (fn) {
-            var ctx = _.find(contextList, {fn: fn});
-            if (ctx) {
-                ctx.run(false);
-            } else {
-                ctx = ReactiveContext(fn);
-                ctx.run(true);
-                contextList.push(ctx);
-            }
-        },
-
-        nonReactive: function(fn) {
-            var prevContext = currentContext;
-            currentContext = undefined;
-            fn();
-            currentContext = prevContext;
-        },
+        autorun: ReactiveContext.autorun,
+        nonReactive: ReactiveContext.nonReactive,
 
         debug: {
             on: function() {

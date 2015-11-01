@@ -2,9 +2,9 @@ var path = require('path');
 
 // webpack.config.js
 module.exports = {
-    entry: './src/reactiveStore.js',
+    entry: './src/reactive-store-for-browser.js',
     output: {
-        filename: 'dist/reactiveStore.js'
+        filename: 'dist/reactive-store-for-browser.js'
     },
     module: {
         loaders: [

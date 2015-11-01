@@ -1,0 +1,57 @@
+<html>
+<head>
+    <script src="../dist/reactive-store-for-browser.js"></script>
+    <script>
+        RS = ReactiveStore();
+    </script>
+</head>
+<body>
+    <h1>Performance test</h1>
+<script>
+    for (var i = 10;i--;) {
+        console.log(Object.keys(RS.dump()).length + ' items in store');
+        time(addObject.bind(null, 10));
+        time(addObject.bind(null, 100));
+        time(function() {
+            RS.set('another key'+i, 'some value');
+            return 'add another key';
+        });
+
+        time(function() {
+            RS.get('another key'+i);
+            return 'get another key';
+        });
+        addItems(1000);
+        console.log('-------------------------------');
+    }
+
+    function uniq() {
+        uniq.count = uniq.count || 0;
+        return uniq.count++;
+    }
+
+    function addItems(num) {
+        var unique = uniq();
+        for(var i = num; i--;) {
+            RS.set('aKey'+unique+i, 'some value');
+        }
+        return 'add '+num+' items';
+    }
+
+    function time(fn) {
+        var start = new Date().getTime();
+        console.log(fn(), new Date().getTime() - start);
+    }
+
+    function addObject(numOfKeys) {
+        var obj = {};
+        for(var i = numOfKeys; i--;) {
+            obj['key'+i] = 'some value';
+        }
+        RS.set('object', obj);
+        return 'add object with '+numOfKeys+' keys';
+    }
+
+</script>
+</body>
+</html>
