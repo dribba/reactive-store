@@ -16,6 +16,8 @@ module.exports = () => {
 
     that.setDefaultValue = (key, dflt) => that.get(key).dflt = dflt;
 
+    that.set = (key, obj) => that[key] = obj;
+
     that.get = (key, dflt) => {
         var dict = that;
         var keys = _.keys(dict).filter(k => k === key || k.startsWith(`${key}.`));

@@ -96,7 +96,7 @@ function ReactiveStore() {
         load: function(obj) {
             _.each(obj, function(v, k) {
                 /(\d{4})-(\d{2})-(\d{2})T(\d{2})\:(\d{2})\:(\d{2})/.test(v) && (v = new Date(v));
-                dict[k] = {value: v, deps:[]};
+                dict.set(k, {value: v, deps:[]});
             });
         },
 
