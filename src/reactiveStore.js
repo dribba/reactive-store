@@ -180,16 +180,7 @@ function ReactiveStore() {
                 }, []);
             }
         },
-        dump: function() {
-            return _.reduce(_.keys(dict), function(ret, key) {
-                var v = dict[key].value;
-                if(v !== undefined) {
-                    _.isDate(v) && (v = v.toISOString());
-                    ret[key] = v;
-                }
-                return ret;
-            }, {})
-        },
+        dump: dict.dump,
 
         load: function(obj) {
             _.each(obj, function(v, k) {
