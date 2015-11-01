@@ -38,7 +38,7 @@ function ReactiveStore() {
                     _.each(val, function (v, k) {
                         set(`${key}.${k}`, v);
                     });
-                    dict.getFromDict(key).dflt = {};
+                    dict.setDefaultValue(key, {});
                     _.keys(val).length === 0 && notifier.add(key); // notify on empty object being stored
                 }
 
@@ -47,7 +47,7 @@ function ReactiveStore() {
                     _.each(val, function (v, idx) {
                         set(key + '.' + idx, v);
                     });
-                    dict.getFromDict(key).dflt = [];
+                    dict.setDefaultValue(key, []);
                     val.length === 0 && notifier.add(key);    // notify if storing an empty array
                 }
 

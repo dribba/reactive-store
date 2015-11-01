@@ -12,6 +12,10 @@ module.exports = function() {
         }, {})
     };
 
+    that.setDefaultValue = function(key, dflt) {
+        that.getFromDict(key).dflt = dflt;
+    };
+
     that.getFromDict = function(key, dflt) {
         var dict = that;
         var keys = _.keys(dict).filter(k => k === key || k.startsWith(`${key}.`));
