@@ -17,7 +17,8 @@ function ReactiveStore() {
     var that = {
         clearChildren: function(key) {
             _.each(_.keys(that.dump()), function(k) {
-                key !== k && _.startsWith(k, key) && (dict[k].deps.length === 0 ? (delete dict[k]) : dict[k].value = undefined);
+                var obj = dict.get(k)
+                key !== k && _.startsWith(k, key) && (obj.deps.length === 0 ? (dict.delete(k)) : obj.value = undefined);
             });
         },
         set: function (key, val) {
@@ -52,7 +53,7 @@ function ReactiveStore() {
                 }
 
                 function setValue() {
-                    var obj = dict.getFromDict(key);
+                    var obj = dict.get(key);
                     if (obj.value !== val) {
                         obj.value = val;
                         obj.dflt = undefined;
@@ -67,7 +68,7 @@ function ReactiveStore() {
                 throw new Error("Can not get value of undefined key");
             }
             key = convertToDotNotation(key);
-            var obj = dict.getFromDict(key);
+            var obj = dict.get(key);
 
             if(ReactiveContext.current) {
                 var dep = Dependency();
