@@ -1,11 +1,12 @@
 module.exports = () => {
     var that = {};
+    var dict = {};
 
-    that.delete = key => delete that[key];
+    that.delete = key => delete dict[key];
 
     that.dump = () => {
-        return _.reduce(_.keys(that), function(ret, key) {
-            var v = that[key].value;
+        return _.reduce(_.keys(dict), function(ret, key) {
+            var v = dict[key].value;
             if(v !== undefined) {
                 _.isDate(v) && (v = v.toISOString());
                 ret[key] = v;
@@ -16,10 +17,9 @@ module.exports = () => {
 
     that.setDefaultValue = (key, dflt) => that.get(key).dflt = dflt;
 
-    that.set = (key, obj) => that[key] = obj;
+    that.set = (key, obj) => dict[key] = obj;
 
     that.get = (key, dflt) => {
-        var dict = that;
         var keys = _.keys(dict).filter(k => k === key || k.startsWith(`${key}.`));
 
         if (keys.length === 0) {
