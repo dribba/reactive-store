@@ -21,12 +21,20 @@ describe('DictStore', () => {
         it('should store an object', () => {
             store.setValue('some.key', {foo:1, bar:2});
             expect(store.getValue('some.key.foo')).toBe(1);
-            console.log(store.getLeaf('some'));
         });
 
         it('should store an array', () => {
             store.setValue('some.deep.array', [1,2,3]);
             expect(store.getValue('some.deep.array')).toEqual([1,2,3]);
-        })
+        });
+
+        it('should store an object', () => {
+            store.setValue('some', {deep: {array: [1,2,3]}});
+            expect(store.getValue('some')).toEqual({
+                deep: {array: [1,2,3]}
+            })
+            expect(store.getValue('some.deep.array')).toEqual([1,2,3]);
+            expect(store.getValue('some.deep.array.1')).toEqual(2);
+        });
     });
 });

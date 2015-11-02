@@ -39,11 +39,14 @@ module.exports = function () {
 
         var props = _.without(_.keys(leaf), '__deps', '__value');
 
-console.log(isArray(props), props);
-
         if(isArray(props)) {
             return props.map(idx => that.getValue(`${key}.${idx}`));
         }
+
+        return props.reduce((memo, prop) => {
+            memo[prop] = that.getValue(`${key}.${prop}`);
+            return memo;
+        }, {});
 
         function isArray(props) {
             for(var i=props.length;i--;) {
