@@ -1,16 +1,17 @@
 var _ = require('lodash');
 
-var x = {
+// This is the structure of the store
+var ___store = {
     a: {
         b: {
                 __value: 2,
-                __deps: [],
+                __meta: {},
         },
         c: {
             __value: 3,
-            __deps: []
+            __meta: {}
         },
-        __deps: [],
+        __meta: {},
     }
 };
 
@@ -37,7 +38,7 @@ module.exports = function () {
             return value;
         }
 
-        var props = _.without(_.keys(leaf), '__deps', '__value');
+        var props = _.without(_.keys(leaf), '__meta', '__value');
 
         if(isArray(props)) {
             return props.map(idx => that.getValue(`${key}.${idx}`));
@@ -65,12 +66,12 @@ module.exports = function () {
 
         return parts.reduce((storeObj, part, idx) => {
             if(!storeObj[part]) {
-                storeObj[part] = {__deps:[]};
+                storeObj[part] = {};
             }
             if(idx === length - 1) {
                 return storeObj[part];
             } else {
-                storeObj[part] === undefined && (storeObj[part]= {__deps:[]});
+                storeObj[part] === undefined && (storeObj[part]= {});
                 delete storeObj[part].__value;
                 return storeObj[part];
             }

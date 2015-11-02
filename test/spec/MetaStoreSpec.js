@@ -1,4 +1,4 @@
-var DictStore = require('DictStore');
+var DictStore = require('MetaStore');
 
 describe('DictStore', () => {
     var store;
