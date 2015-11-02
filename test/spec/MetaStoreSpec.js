@@ -8,6 +8,11 @@ describe('MetaStore', () => {
     });
 
     describe('setValue()', () => {
+        it('should returned undefined for a non-existent key', () => {
+            expect(store.getValue('fake')).not.toBeDefined();
+            expect(store.getValue('a.fake')).not.toBeDefined();
+        });
+
         it('should set a value in the base of the tree', () => {
             store.setValue('aKey', 'a value');
             expect(store.getValue('aKey')).toBe('a value');
@@ -57,6 +62,19 @@ describe('MetaStore', () => {
         it('should return the full metadata object if no name given', () => {
             store.setMeta('some.key', {foo:'bar', baz: 'foo'});
             expect(store.getMeta('some.key')).toEqual({foo: 'bar', baz: 'foo'});
+        });
+    });
+
+    describe('delet()', () => {
+        it('should delete a key', () => {
+            store.setMeta('some.deep.key', {foo: 'bar'});
+            store.setMeta('some.deep', {foo: 'baz'});
+            store.setValue('some.deep.key', 10);
+            expect(store.getValue('some.deep.key')).toBe(10);
+            store.delete('some.deep.key');
+            expect(store.getMeta('some.deep.key')).toBeUndefined();
+            expect(store.getMeta('some.deep')).toEqual({foo: 'baz'});
+            expect(store.getValue('some.deep.key')).toBeUndefined();
         });
     });
 });

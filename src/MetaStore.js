@@ -19,6 +19,14 @@ module.exports = function () {
     var store = {};
     var that = {};
 
+    that.delete = key => {
+        key.split('.').reduce((memo, it, idx) => {
+            var obj = memo[it];
+            obj && idx === key.split('.').length - 1 && delete memo[it];
+            return memo[it];
+        }, store);
+    };
+
     that.setMeta = (key, data) => {
         var leaf = that.getLeaf(key);
         leaf.__meta = leaf.__meta || {};
@@ -51,6 +59,10 @@ module.exports = function () {
         }
 
         var props = _.without(_.keys(leaf), '__meta', '__value');
+
+        if (props.length === 0) {
+            return undefined;
+        }
 
         if(isArray(props)) {
             return props.map(idx => that.getValue(`${key}.${idx}`));

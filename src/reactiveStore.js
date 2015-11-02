@@ -1,5 +1,4 @@
 var _ = require('lodash');
-var R = require('ramda');
 var Dict = require('./Dict');
 var Notifier = require('./Notifier');
 var ReactiveContext = require('./ReactiveContext');
