@@ -14,7 +14,8 @@ module.exports = {
     devtool: "#inline-source-map",
     resolve: {
         alias: {
-            ReactiveStore: path.normalize(__dirname + '/../src/reactiveStore.js')
+            ReactiveStore: path.normalize(__dirname + '/../src/reactiveStore.js'),
+            DictStore: path.normalize(__dirname + '/../src/DictStore.js')
         }
     }
 };
