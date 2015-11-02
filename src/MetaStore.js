@@ -28,7 +28,7 @@ module.exports = function () {
 
     that.getMeta = (key, name) => {
         var leaf = that.getLeaf(key);
-        return leaf.__meta ? leaf.__meta[name] : undefined;
+        return leaf.__meta ? (name ? leaf.__meta[name] : leaf.__meta) : undefined;
     };
 
     that.setValue = (key, value) => {

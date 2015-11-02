@@ -53,5 +53,10 @@ describe('MetaStore', () => {
             expect(store.getMeta('some.key', 'foo')).toBe('bar');
             expect(store.getMeta('some.key', 'baz')).toBe('foo');
         });
+
+        it('should return the full metadata object if no name given', () => {
+            store.setMeta('some.key', {foo:'bar', baz: 'foo'});
+            expect(store.getMeta('some.key')).toEqual({foo: 'bar', baz: 'foo'});
+        });
     });
 });
