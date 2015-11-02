@@ -18,6 +18,11 @@ describe('DictStore', () => {
             expect(store.getValue('some.deeper.key')).toBe('a value');
         });
 
+        it('should get a sub object', () => {
+            store.setValue('some.deeper.key', 'a value');
+            expect(store.getValue('some.deeper')).toEqual({key: 'a value'});
+        })
+
         it('should store an object', () => {
             store.setValue('some.key', {foo:1, bar:2});
             expect(store.getValue('some.key.foo')).toBe(1);
