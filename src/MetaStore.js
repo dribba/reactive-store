@@ -19,11 +19,11 @@ module.exports = function () {
     var store = {};
     var that = {};
 
-    that.setMeta = (key, name, data) => {
+    that.setMeta = (key, data) => {
         var leaf = that.getLeaf(key);
         leaf.__meta = leaf.__meta || {};
 
-        leaf.__meta[name] = data;
+        _.extend(leaf.__meta, data);
     };
 
     that.getMeta = (key, name) => {

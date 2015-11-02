@@ -49,8 +49,9 @@ describe('MetaStore', () => {
         });
 
         it('should return the metadata for some given key', () => {
-            store.setMeta('some.key', 'foo', 'bar');
+            store.setMeta('some.key', {foo: 'bar', baz:'foo'});
             expect(store.getMeta('some.key', 'foo')).toBe('bar');
+            expect(store.getMeta('some.key', 'baz')).toBe('foo');
         });
     });
 });
