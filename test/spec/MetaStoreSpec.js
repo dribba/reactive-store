@@ -1,10 +1,10 @@
-var DictStore = require('MetaStore');
+var MetaStore = require('MetaStore');
 
-describe('DictStore', () => {
+describe('MetaStore', () => {
     var store;
 
     beforeEach(() => {
-        store = DictStore();
+        store = MetaStore();
     });
 
     describe('setValue()', () => {
@@ -40,6 +40,17 @@ describe('DictStore', () => {
             })
             expect(store.getValue('some.deep.array')).toEqual([1,2,3]);
             expect(store.getValue('some.deep.array.1')).toEqual(2);
+        });
+    });
+
+    describe('getMeta()', () => {
+        it('should return undefined for an unknown key', () => {
+            expect(store.getMeta('some.unknown.key', 'fake')).toBe(undefined);
+        });
+
+        it('should return the metadata for some given key', () => {
+            store.setMeta('some.key', 'foo', 'bar');
+            expect(store.getMeta('some.key', 'foo')).toBe('bar');
         });
     });
 });

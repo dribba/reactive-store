@@ -19,6 +19,18 @@ module.exports = function () {
     var store = {};
     var that = {};
 
+    that.setMeta = (key, name, data) => {
+        var leaf = that.getLeaf(key);
+        leaf.__meta = leaf.__meta || {};
+
+        leaf.__meta[name] = data;
+    };
+
+    that.getMeta = (key, name) => {
+        var leaf = that.getLeaf(key);
+        return leaf.__meta ? leaf.__meta[name] : undefined;
+    };
+
     that.setValue = (key, value) => {
         if(_.isArray(value)) {
             return value.forEach((it, idx) => that.setValue(`${key}.${idx}`, it));
