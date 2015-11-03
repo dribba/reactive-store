@@ -19,7 +19,7 @@ module.exports = () => {
         store.setMeta(key, {deps: deps ? deps.concat(dep) : [dep]});
     };
 
-    that.getDependencies = (key) => store.getMeta(key, 'deps');
+    that.getDependencies = (key) => store.getMeta(key, 'deps') || [];
 
 
     return that;

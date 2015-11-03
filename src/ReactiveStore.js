@@ -17,10 +17,8 @@ function ReactiveStore() {
 
     var that = {
         clearChildren: function(key) {
-            _.each(_.keys(that.dump()), function(k) {
-                var obj = dict.get(k)
-                key !== k && _.startsWith(k, key) && (obj.deps.length === 0 ? (dict.delete(k)) : obj.value = undefined);
-            });
+            var val = dict.get(key);
+            _.isPlainObject(val) && _.keys(val).forEach(k => dict.delete(`${key}.${k}`));
         },
         set: function (key, val) {
             debug && console.log('set(' + key + ', ' + val + ')');
@@ -33,8 +31,10 @@ function ReactiveStore() {
                     throw new Error("Can not get value of undefined key");
                 }
                 key = convertToDotNotation(key);
-                dict.set(key, val);
-                notifier.add(key);
+                if(dict.get(key) !== val) {
+                    dict.set(key, val);
+                    notifier.add(key);
+                }
             }
         },
         get: function (key) {
