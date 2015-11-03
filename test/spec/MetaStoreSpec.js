@@ -24,6 +24,7 @@ describe('MetaStore', () => {
         });
 
         it('should get a sub object', () => {
+window.store = store;
             store.setValue('some.deeper.key', 'a value');
             expect(store.getValue('some.deeper')).toEqual({key: 'a value'});
         })

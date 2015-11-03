@@ -18,7 +18,11 @@ function ReactiveStore() {
     var that = {
         clearChildren: function(key) {
             var val = dict.get(key);
-            _.isPlainObject(val) && _.keys(val).forEach(k => dict.set(`${key}.${k}`, undefined));
+            _.isPlainObject(val) && _.keys(val).forEach(k => {
+                var childKey = `${key}.${k}`;
+                dict.set(childKey, undefined);
+                dict.setMeta(childKey, {type: undefined});
+            });
         },
         set: function (key, val) {
             debug && console.log('set(' + key + ', ' + val + ')');

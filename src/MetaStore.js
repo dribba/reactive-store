@@ -83,13 +83,17 @@ module.exports = function () {
     that.getValue = (key) => {
         var leaf = that.getLeaf(key);
         var value = leaf.__value;
-        var type = that.getMeta(key, 'type');
+        var type = leaf.__meta ? leaf.__meta.type : undefined;
+        var props = _.without(_.keys(leaf), '__meta', '__value');
+
+        if(type === undefined && props.length === 0) {
+            return undefined;
+        }
 
         if(value !== undefined) {
             return value;
         }
 
-        var props = _.without(_.keys(leaf), '__meta', '__value');
 
         if (props.length === 0 && type !== 'object' && type !== 'array') {
             return undefined;
@@ -100,7 +104,8 @@ module.exports = function () {
         }
 
         return props.reduce((memo, prop) => {
-            memo[prop] = that.getValue(`${key}.${prop}`);
+            var val = that.getValue(`${key}.${prop}`);
+            val !== undefined && (memo[prop] = val);
             return memo;
         }, {});
     };
