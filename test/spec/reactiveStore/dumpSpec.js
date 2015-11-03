@@ -16,7 +16,7 @@ describe('ReactiveStore.dump()', function() {
     it('should dump an object with the values', function() {
         var o = rs.dump();
         expect(o.value1).toBe('a value');
-        expect(o['some.deep.value']).toBe('another');
+        expect(o.some.deep.value).toBe('another');
     });
 
     it('should serialize dates using ISO string', function() {
@@ -26,6 +26,6 @@ describe('ReactiveStore.dump()', function() {
 
     it('should dump an object with arrays', function() {
         var o = rs.dump();
-        expect(o['arr.1']).toBe(2);
+        expect(o.arr[1]).toBe(2);
     });
 });

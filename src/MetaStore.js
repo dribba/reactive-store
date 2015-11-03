@@ -21,10 +21,19 @@ module.exports = function () {
 
     that.raw = () => store;
     that.dump = () => {
-        return _.keys(store).reduce((memo, k) => {
+        var out = _.keys(store).reduce((memo, k) => {
                 memo[k] = that.getValue(k);
             return memo;
         }, {});
+        convertDatesToStrings(out);
+        return out;
+
+        function convertDatesToStrings(out) {
+            _.each(out, (v, k) => {
+                _.isDate(v) && (out[k] = v.toISOString());
+                _.isPlainObject(v) && convertDatesToStrings(v);
+            });
+        }
     };
 
     that.load = (obj) => {
