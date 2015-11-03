@@ -24,7 +24,6 @@ describe('MetaStore', () => {
         });
 
         it('should get a sub object', () => {
-window.store = store;
             store.setValue('some.deeper.key', 'a value');
             expect(store.getValue('some.deeper')).toEqual({key: 'a value'});
         })
@@ -99,6 +98,40 @@ window.store = store;
             store.load({a: {one: 1, two:2}, b: [1,2]});
             expect(store.getValue('a.one')).toBe(1);
             expect(store.getValue('b.0')).toBe(1);
+        });
+    });
+
+    describe('getLeaf()', () => {
+        it('should create a leaf if one does not exist',() => {
+            expect(store.getLeaf('foo.bar')).not.toBeUndefined();
+        });
+    });
+
+    describe('getLeafIfExists()', () => {
+        it('should not create a leaf if one does not exist', () => {
+            expect(store.getLeafIfExists('foo.bar')).toBeUndefined();
+        });
+
+        it('should return a leaf if one exists', () => {
+            store.getLeaf('foo.bar');
+            expect(store.getLeafIfExists('foo.bar')).not.toBeUndefined();
+        });
+    });
+
+    describe('getLeafs()', () => {
+        it('should return an empty set for a key that does not exist', () => {
+            expect(store.getLeafs('a.b.c')).toEqual([]);
+        });
+
+        it('should not return all leafs with values', () => {
+window.store = store;
+            store.setValue('a.b.c', 10);
+            store.setValue('a.b.d', 20);
+            store.setValue('a.d', 30);
+            store.setValue('a.e', undefined);
+            var leafs = store.getLeafs('a');
+console.log(leafs);
+            expect(leafs.length).toBe(3);
         });
     });
 });

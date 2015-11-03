@@ -84,7 +84,7 @@ module.exports = function () {
         var leaf = that.getLeaf(key);
         var value = leaf.__value;
         var type = leaf.__meta ? leaf.__meta.type : undefined;
-        var props = _.without(_.keys(leaf), '__meta', '__value');
+        var props = getProps(leaf);
 
         if(type === undefined && props.length === 0) {
             return undefined;
@@ -110,25 +110,46 @@ module.exports = function () {
         }, {});
     };
 
-    that.getLeaf = (key) => {
+    that.getLeafIfExists = key => that.getLeaf(key, false);
+
+    that.getLeaf = (key, create = true) => {
         var parts = key.split('.');
-        var length = parts.length;
 
-        return parts.reduce((storeObj, part, idx) => {
-            if(!storeObj[part]) {
-                storeObj[part] = {};
-            }
-            if(idx === length - 1) {
+        // try is a cheap way to break the reduce if we are not creating objects as we go
+        try {
+            return parts.reduce((storeObj, part, idx) => {
+                if (!storeObj[part]) {
+                    create && (storeObj[part] = {});
+                }
                 return storeObj[part];
-            } else {
-                storeObj[part] === undefined && (storeObj[part]= {});
-                delete storeObj[part].__value;
-                return storeObj[part];
-            }
+            }, store);
+        } catch(e) {
+            return undefined;
+        }
+    };
 
-        },store);
+    that.getLeafs = (key) => {
+        var root = that.getLeafIfExists(key);
+        return root ? _.flattenDeep(walk(root)) : [];
+
+        function walk(root) {
+            return getProps(root).reduce((leafs, prop) => {
+                var child = root[prop];
+                isLeaf(child) ? leafs.push(child) : leafs.push(walk(child));
+                return leafs;
+            }, []);
+        };
+    };
+
+    return that;
+
+    function getProps(leaf) {
+        return _.without(_.keys(leaf), '__value', '__meta');
+    }
+
+    function isLeaf(candidate) {
+        return candidate.__value !== undefined && getProps(candidate).length === 0;
     };
 
 
-    return that;
 }
