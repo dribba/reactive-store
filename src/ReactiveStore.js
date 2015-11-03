@@ -32,9 +32,8 @@ function ReactiveStore() {
                 }
                 key = convertToDotNotation(key);
 
-                var currentVal = dict.get(key);
-                if(val === undefined || currentVal === undefined || (_.matches(currentVal)(val) === false)) {
-                    _.flatten(dict.set(key, val)).forEach(notifier.add);
+                if(JSON.stringify(val) !== JSON.stringify(dict.get(key))) {
+                    _.flattenDeep(dict.set(key, val)).forEach(notifier.add);
                 }
             }
         },
