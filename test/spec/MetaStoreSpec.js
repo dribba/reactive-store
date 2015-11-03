@@ -1,4 +1,4 @@
-var MetaStore = require('MetaStore');
+var MetaStore = require('src/MetaStore');
 
 describe('MetaStore', () => {
     var store;

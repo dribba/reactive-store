@@ -1,4 +1,4 @@
-var ReactiveStore = require('ReactiveStore');
+var ReactiveStore = require('src/ReactiveStore');
 
 describe('ReactiveStore.nonReactive', function() {
     var rs;

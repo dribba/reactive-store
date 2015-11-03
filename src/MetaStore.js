@@ -19,6 +19,7 @@ module.exports = function () {
     var store = {};
     var that = {};
 
+    that.raw = () => store;
     that.dump = () => {
         return _.keys(store).reduce((memo, k) => {
                 memo[k] = that.getValue(k);
