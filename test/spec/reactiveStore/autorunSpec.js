@@ -150,7 +150,6 @@ describe('ReactiveStore.autorun()', function() {
         rs1.autorun(spy);
 
         expect(spy.calls.count()).toBe(1);
-
         rs1.set('foo', {bar:1,baz:2, boo: 3});
         expect(spy.calls.count()).toBe(2);
     });

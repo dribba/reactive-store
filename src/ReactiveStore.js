@@ -31,9 +31,8 @@ function ReactiveStore() {
                     throw new Error("Can not get value of undefined key");
                 }
                 key = convertToDotNotation(key);
-                if(dict.get(key) !== val) {
-                    dict.set(key, val);
-                    notifier.add(key);
+                if(val === undefined || _.matches(val)(dict.get(key)) === false) {
+                    _.flatten(dict.set(key, val)).forEach(notifier.add);
                 }
             }
         },

@@ -53,14 +53,28 @@ module.exports = function () {
 
     that.setValue = (key, value) => {
         if(_.isArray(value)) {
-            return value.forEach((it, idx) => that.setValue(`${key}.${idx}`, it));
+            clearExtraArrayValues();
+            return value.map((it, idx) => that.setValue(`${key}.${idx}`, it));
         }
 
         if(_.isPlainObject(value)) {
-            return _.each(value, (v, k) => that.setValue(`${key}.${k}`, v));
+            return _.map(value, (v, k) => that.setValue(`${key}.${k}`, v));
         }
 
         that.getLeaf(key).__value = value;
+        return key;
+
+        function clearExtraArrayValues() {
+            var curr = that.getValue(key);
+            if(_.isArray(curr)) {
+                var extra = curr.length - value.length;
+                if(extra > 0) {
+                    for(var i = value.length;i < value.length + extra; i++) {
+                        that.delete(`${key}.${i}`)
+                    }
+                }
+            }
+        }
     };
 
     that.getValue = (key) => {

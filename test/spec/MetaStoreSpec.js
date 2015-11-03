@@ -46,6 +46,13 @@ describe('MetaStore', () => {
             expect(store.getValue('some.deep.array')).toEqual([1,2,3]);
             expect(store.getValue('some.deep.array.1')).toEqual(2);
         });
+
+        it('should remove extra values when new array is stored', () => {
+            store.setValue('arr', [1,2,3,4,5]);
+            expect(store.getValue('arr')).toEqual([1,2,3,4,5]);
+            store.setValue('arr', [1,2,3]);
+            expect(store.getValue('arr')).toEqual([1,2,3]);
+        });
     });
 
     describe('getMeta()', () => {
