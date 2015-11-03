@@ -53,13 +53,17 @@ module.exports = function () {
 
     that.setValue = (key, value) => {
         if(_.isArray(value)) {
+            that.setMeta(key, {type: 'array'})
             clearExtraArrayValues();
-            return value.map((it, idx) => that.setValue(`${key}.${idx}`, it));
+            return [key].concat(value.map((it, idx) => that.setValue(`${key}.${idx}`, it)));
         }
 
         if(_.isPlainObject(value)) {
-            return _.map(value, (v, k) => that.setValue(`${key}.${k}`, v));
+            that.setMeta(key, {type: 'object'});
+            return [key].concat(_.map(value, (v, k) => that.setValue(`${key}.${k}`, v)));
         }
+
+        that.setMeta(key, {type: 'plain'});
         that.getLeaf(key).__value = value;
         return [key];
 
@@ -79,17 +83,19 @@ module.exports = function () {
     that.getValue = (key) => {
         var leaf = that.getLeaf(key);
         var value = leaf.__value;
-        if(value) {
+        var type = that.getMeta(key, 'type');
+
+        if(value !== undefined) {
             return value;
         }
 
         var props = _.without(_.keys(leaf), '__meta', '__value');
 
-        if (props.length === 0) {
+        if (props.length === 0 && type !== 'object' && type !== 'array') {
             return undefined;
         }
 
-        if(isArray(props)) {
+        if(that.getMeta(key, 'type') === 'array') {
             return props.map(idx => that.getValue(`${key}.${idx}`));
         }
 
@@ -97,16 +103,6 @@ module.exports = function () {
             memo[prop] = that.getValue(`${key}.${prop}`);
             return memo;
         }, {});
-
-        function isArray(props) {
-            for(var i=props.length;i--;) {
-                if(parseInt(props[i], 10) !== i) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
     };
 
     that.getLeaf = (key) => {
