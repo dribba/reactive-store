@@ -7,6 +7,20 @@ describe('ReactiveStore.autorun()', function() {
         rs1 = ReactiveStore();
     });
 
+    it('will not call autorun more than once for multiple gets',() => {
+        var spy = jasmine.createSpy().and.callFake(() => {
+            rs1.get('myKey');
+            rs1.get('myKey');
+            rs1.get('myKey');
+        });
+        rs1.autorun(() => {
+            spy();
+        });
+        expect(spy.calls.count()).toBe(1);
+        rs1.set('myKey', 'value');
+        expect(spy.calls.count()).toBe(2);
+    });
+
     it('will only trigger autorun on the key being changed', function() {
         var aSpy = jasmine.createSpy().and.callFake(() => rs1.get('a'));
         var bSpy = jasmine.createSpy().and.callFake(() => rs1.get('b'));
@@ -81,11 +95,15 @@ describe('ReactiveStore.autorun()', function() {
         });
         expect(valSpy.calls.count()).toBe(1);
         expect(aSpy.calls.count()).toBe(1);
-        rs1.clearChildren('val');
-        expect(valSpy.calls.count()).toBe(1);
-        rs1.set('val', {a:2});
-        expect(valSpy.calls.count()).toBe(2);
+        rs1.set('val.a', 3);
         expect(aSpy.calls.count()).toBe(2);
+        expect(valSpy.calls.count()).toBe(2);
+        rs1.clearChildren('val');
+        return;
+        expect(valSpy.calls.count()).toBe(2);
+        rs1.set('val', {a:2});
+        expect(valSpy.calls.count()).toBe(3);
+        expect(aSpy.calls.count()).toBe(3);
     });
 
     it('should still notify if empty array is stored', function() {

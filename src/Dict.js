@@ -3,7 +3,7 @@ var MetaStore = require('./MetaStore');
 module.exports = () => {
     var that = {};
     var store = MetaStore();
-    window.store = store;
+    that.raw = store.raw;
     that.delete = store.delete;
     that.dump = () => store.dump;
     that.set = store.setValue;

@@ -18,7 +18,7 @@ function ReactiveStore() {
     var that = {
         clearChildren: function(key) {
             var val = dict.get(key);
-            _.isPlainObject(val) && _.keys(val).forEach(k => dict.delete(`${key}.${k}`));
+            _.isPlainObject(val) && _.keys(val).forEach(k => dict.set(`${key}.${k}`, undefined));
         },
         set: function (key, val) {
             debug && console.log('set(' + key + ', ' + val + ')');
@@ -64,6 +64,7 @@ function ReactiveStore() {
 
         autorun: ReactiveContext.autorun,
         nonReactive: ReactiveContext.nonReactive,
+        raw: dict.raw,
 
         debug: {
             on: function() {
