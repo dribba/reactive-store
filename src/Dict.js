@@ -6,6 +6,7 @@ module.exports = () => {
     that.raw = store.raw;
     that.delete = store.delete;
     that.dump = store.dump;
+    that.load = store.load;
     that.set = store.setValue;
     that.get = (key, dflt) => {
         var value = store.getValue(key);

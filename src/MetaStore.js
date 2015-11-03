@@ -37,7 +37,15 @@ module.exports = function () {
     };
 
     that.load = (obj) => {
-        _.keys(obj).forEach(k => that.setValue(k, obj[k]));
+        convertDateStringsToDates(obj);
+        _.each(obj, (v, k) => that.setValue(k, v));
+
+        function convertDateStringsToDates(obj) {
+            _.each(obj, function(v, k) {
+                /(\d{4})-(\d{2})-(\d{2})T(\d{2})\:(\d{2})\:(\d{2})/.test(v) && (obj[k] = new Date(v));
+            });
+        }
+
     };
 
     that.delete = key => {
