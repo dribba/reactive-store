@@ -65,7 +65,7 @@ describe('MetaStore', () => {
         });
     });
 
-    describe('delet()', () => {
+    describe('delete()', () => {
         it('should delete a key', () => {
             store.setMeta('some.deep.key', {foo: 'bar'});
             store.setMeta('some.deep', {foo: 'baz'});
@@ -75,6 +75,22 @@ describe('MetaStore', () => {
             expect(store.getMeta('some.deep.key')).toBeUndefined();
             expect(store.getMeta('some.deep')).toEqual({foo: 'baz'});
             expect(store.getValue('some.deep.key')).toBeUndefined();
+        });
+    });
+
+    describe('dump()', () => {
+        it('should dump an object representing the values in the store', () => {
+            store.setValue('a', {one: 1, two: 2});
+            store.setValue('b', [1,2]);
+            expect(store.dump()).toEqual({a:{one:1, two:2}, b:[1,2]});
+        });
+    });
+
+    describe('load()', () => {
+        it('should load an object into the store', () => {
+            store.load({a: {one: 1, two:2}, b: [1,2]});
+            expect(store.getValue('a.one')).toBe(1);
+            expect(store.getValue('b.0')).toBe(1);
         });
     });
 });

@@ -15,7 +15,8 @@ module.exports = {
     resolve: {
         alias: {
             ReactiveStore: path.normalize(__dirname + '/../src/reactiveStore.js'),
-            MetaStore: path.normalize(__dirname + '/../src/MetaStore.js')
+            MetaStore: path.normalize(__dirname + '/../src/MetaStore.js'),
+            Dict: path.normalize(__dirname + '/../src/Dict.js')
         }
     }
 };

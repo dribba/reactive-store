@@ -19,6 +19,17 @@ module.exports = function () {
     var store = {};
     var that = {};
 
+    that.dump = () => {
+        return _.keys(store).reduce((memo, k) => {
+                memo[k] = that.getValue(k);
+            return memo;
+        }, {});
+    };
+
+    that.load = (obj) => {
+        _.keys(obj).forEach(k => that.setValue(k, obj[k]));
+    };
+
     that.delete = key => {
         key.split('.').reduce((memo, it, idx) => {
             var obj = memo[it];
