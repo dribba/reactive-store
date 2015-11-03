@@ -60,9 +60,8 @@ module.exports = function () {
         if(_.isPlainObject(value)) {
             return _.map(value, (v, k) => that.setValue(`${key}.${k}`, v));
         }
-
         that.getLeaf(key).__value = value;
-        return key;
+        return [key];
 
         function clearExtraArrayValues() {
             var curr = that.getValue(key);
