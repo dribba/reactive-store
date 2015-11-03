@@ -11,13 +11,13 @@ describe('ReactiveStore.clearChildren()', function() {
     it('should clear child keys from the store', function() {
         rs1.set('obj', {a:1,b:2,c:3});
         rs1.clearChildren('obj');
-        expect(rs1.get('obj')).not.toBeDefined();
+        expect(rs1.get('obj')).toEqual({});
     });
 
     it('should clear an array from the store', function() {
         rs1.set('arr', [1,2,3]);
         rs1.clearChildren('arr');
-        expect(rs1.get('arr')).not.toBeDefined();
+        expect(rs1.get('arr')).toEqual([]);
     });
 
     it('should set a key with a dependency to undefined', function() {

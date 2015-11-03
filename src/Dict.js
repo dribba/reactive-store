@@ -5,7 +5,7 @@ module.exports = () => {
     var store = MetaStore();
     that.raw = store.raw;
     that.delete = store.delete;
-    that.dump = () => store.dump;
+    that.dump = store.dump;
     that.set = store.setValue;
     that.get = (key, dflt) => {
         var value = store.getValue(key);
@@ -20,7 +20,10 @@ module.exports = () => {
     };
 
     that.getDependencies = (key) => store.getMeta(key, 'deps') || [];
-
+    that.clearChildren = key => {
+        var leafs = store.getLeafs(key);
+        leafs.forEach(leaf => leaf.__value = undefined);
+    };
 
     return that;
 };

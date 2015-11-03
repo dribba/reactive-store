@@ -124,14 +124,18 @@ describe('MetaStore', () => {
         });
 
         it('should not return all leafs with values', () => {
-window.store = store;
             store.setValue('a.b.c', 10);
             store.setValue('a.b.d', 20);
             store.setValue('a.d', 30);
             store.setValue('a.e', undefined);
             var leafs = store.getLeafs('a');
-console.log(leafs);
             expect(leafs.length).toBe(3);
+            expect(_.pluck(leafs, '__value')).toEqual([10,20,30]);
+        });
+
+        it('should return an empty array if passed a leaf', () => {
+            store.setValue('a.b.c', 10);
+            expect(store.getLeafs('a.b.c')).toEqual([]);
         });
     });
 });

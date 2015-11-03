@@ -100,7 +100,11 @@ module.exports = function () {
         }
 
         if(that.getMeta(key, 'type') === 'array') {
-            return props.map(idx => that.getValue(`${key}.${idx}`));
+            return props.reduce((out, idx) => {
+                var value = that.getValue(`${key}.${idx}`);
+                value && out.push(value);
+                return out;
+            }, []);
         }
 
         return props.reduce((memo, prop) => {
