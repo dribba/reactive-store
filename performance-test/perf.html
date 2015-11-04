@@ -1,5 +1,6 @@
 <html>
 <head>
+    <script src="lodash.js"></script>
     <script src="../dist/reactive-store-for-browser.js"></script>
     <script>
         RS = ReactiveStore();
@@ -8,11 +9,19 @@
 <body>
 <h1>Performance test</h1>
 <script>
+
+    RS.autorun(function() {
+         time(function() {
+             RS.get('object');
+             return 'listener triggered on object change';
+         });
+    });
     time(function () {
-        for (var i = 10; i--;) {
-            console.log(Object.keys(RS.dump()).length + ' items in store');
+        for (var i = 100; i--;) {
+            console.log(`${getNumberOfItemsInStore(RS.dump())} items in store`);
             time(addObject.bind(null, 10));
             time(addObject.bind(null, 100));
+            time(getObject.bind(null, 100));
             time(function () {
                 RS.set('another key' + i, 'some value');
                 return 'add another key';
@@ -22,11 +31,20 @@
                 RS.get('another key' + i);
                 return 'get another key';
             });
-            addItems(1000);
+            time(addItems.bind(null, 1000));
             console.log('-------------------------------');
         }
         return 'total';
     });
+
+    function getNumberOfItemsInStore(obj) {
+        var count = 0;
+        return Object.keys(obj).reduce(function(count, key) {
+            _.isPlainObject(obj[key]) && (count += getNumberOfItemsInStore(obj[key]));
+            return count;
+        }, Object.keys(obj).length);
+
+    }
     function uniq() {
         uniq.count = uniq.count || 0;
         return uniq.count++;
@@ -35,7 +53,7 @@
     function addItems(num) {
         var unique = uniq();
         for (var i = num; i--;) {
-            RS.set('aKey' + unique + i, 'some value');
+            RS.set(i+'aKey' + unique, 'some value' + i);
         }
         return 'add ' + num + ' items';
     }
@@ -47,11 +65,22 @@
 
     function addObject(numOfKeys) {
         var obj = {};
+        var unique = uniq();
         for (var i = numOfKeys; i--;) {
-            obj[i+'.key'] = 'some value';
+            obj['object'+unique+'.key'+i] = 'some value';
         }
         RS.set('object', obj);
         return 'add object with ' + numOfKeys + ' keys';
+    }
+
+    function getObject(numOfKeys) {
+        RS.get('object');
+        return 'get object with ' + numOfKeys + ' keys';
+    }
+
+    function deleteObject(numOfKeys) {
+        RS.delete('object')
+        return 'delete object with ' + numOfKeys + 'keys';
     }
 
 
