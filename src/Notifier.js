@@ -1,9 +1,10 @@
 module.exports = function Notifier(dict) {
     var keysToNotify = new Set();
 
-    return {
+    var that = {
         add(key) {
             keysToNotify.add(key);
+            return that;
         },
         flush() {
             var deps = new Set();
@@ -24,5 +25,6 @@ module.exports = function Notifier(dict) {
                 }
             }
         }
-    }
+    };
+    return that;
 }

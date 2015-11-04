@@ -18,6 +18,7 @@ function ReactiveStore() {
     var that = {
         clearChildren: function(key) {
             dict.clearChildren(key);
+            Notifier(dict).add(key).flush();
         },
         set: function (key, val) {
             debug && console.log('set(' + key + ', ' + val + ')');
