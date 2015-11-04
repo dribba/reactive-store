@@ -19,15 +19,4 @@ describe('ReactiveStore.clearChildren()', function() {
         rs1.clearChildren('arr');
         expect(rs1.get('arr')).toEqual([]);
     });
-
-    it('should set a key with a dependency to undefined', function() {
-        var spy = jasmine.createSpy().and.callFake(rs1.get.bind(rs1, 'obj.a'));
-        rs1.set('obj', {a:1});
-        rs1.autorun(spy);
-
-        rs1.clearChildren('obj');
-        expect(rs1.get('obj.a')).toBe(undefined);
-        rs1.set('obj.a', 2);
-        expect(spy.calls.count()).toBe(2);
-    });
 });

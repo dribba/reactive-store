@@ -22,8 +22,7 @@ module.exports = () => {
 
     that.getDependencies = (key) => store.getMeta(key, 'deps') || [];
     that.clearChildren = key => {
-        var leafs = store.getLeafs(key);
-        leafs.forEach(leaf => leaf.__value = undefined);
+        _.keys(that.get(key)).forEach(k => store.delete(`${key}.${k}`));
     };
 
     return that;
