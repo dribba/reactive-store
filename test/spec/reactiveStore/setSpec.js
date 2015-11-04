@@ -37,6 +37,12 @@ describe('ReactiveStore.set', function() {
         expect(rs1.get('a')).toEqual({value: 'a value', another: 'another', something: 'something'});
     });
 
+    it('should be able to handle an array that is not set up front', () => {
+        rs1.set('arr.0', 1);
+        rs1.set('arr.1', 2);
+        expect(_.isArray(rs1.get('arr'))).toBe(true);
+    });
+
     it('should be able to handle an object', function() {
         var obj = {
             'value': 'value',

@@ -70,9 +70,13 @@ module.exports = function () {
 
     that.setValue = (key, value) => {
         if(_.isArray(value)) {
-            that.setMeta(key, {type: 'array'})
+            that.setMeta(key, {type: 'array'});
             clearExtraArrayValues();
             return [key].concat(value.map((it, idx) => that.setValue(`${key}.${idx}`, it)));
+        }
+
+        if(isArrayElement(key, value)) {
+            that.setMeta(getParentKey(key), {type: 'array'});
         }
 
         if(_.isPlainObject(value)) {
@@ -95,7 +99,29 @@ module.exports = function () {
                 }
             }
         }
+
+        function isArrayElement(key, value) {
+            if(_.isArray(value)) {
+                return true;
+            }
+            if(isNaN(_.last(key.split('.'))) === false) {
+                var parentKey = getParentKey(key);
+                var candidate = that.getValue(parentKey);
+                var keys = Object.keys(candidate);
+                return _.isEmpty(keys) === false && Object.keys(candidate).every((v, idx) => parseInt(v) === idx)
+            }
+            return false;
+
+        }
     };
+
+    function getParentKey(key) {
+        var parts = key.split('.');
+        if(parts.length === 1) {
+            return undefined;
+        }
+        return _.initial(key.split('.')).join('.');
+    }
 
     that.getValue = (key) => {
         var leaf = that.getLeaf(key);

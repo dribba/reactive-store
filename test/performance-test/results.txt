@@ -15,7 +15,6 @@ cpu MHz		: 1333.000
 
 TIMES ARE IN MS.
 
-perf.html:63 listener triggered on object change 1
 perf.html:21 1 items in store
 perf.html:63 listener triggered on object change 1
 perf.html:63 add object with 10 keys 3
