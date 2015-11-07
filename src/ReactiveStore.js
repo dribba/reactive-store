@@ -1,4 +1,4 @@
-require('babel-core/polyfill');
+global._babelPolyfill || require('babel-core/polyfill');
 
 var _ = require('lodash');
 var Dict = require('./Dict');
