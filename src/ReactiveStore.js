@@ -1,3 +1,5 @@
+require('babel-core/polyfill');
+
 var _ = require('lodash');
 var Dict = require('./Dict');
 var Notifier = require('./Notifier');
