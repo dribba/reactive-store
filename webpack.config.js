@@ -1,4 +1,6 @@
 var path = require('path');
+var BeepPlugin = require('webpack-beep-plugin');
+
 
 // webpack.config.js
 module.exports = {
@@ -11,6 +13,7 @@ module.exports = {
             { test: /\.js$/, loader: 'babel-loader' }
         ]
     },
-    devtool: "#inline-source-map"
+    devtool: "#inline-source-map",
+    plugins: [new BeepPlugin()]
 };
 

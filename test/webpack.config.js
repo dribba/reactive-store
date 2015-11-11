@@ -1,6 +1,7 @@
 var path = require('path');
 var glob = require('glob');
 var fs = require('fs');
+var BeepPlugin = require('webpack-beep-plugin');
 
 // webpack.config.js
 module.exports = {
@@ -16,6 +17,7 @@ module.exports = {
         alias: {
             src: path.normalize(__dirname + '/../src')
         }
-    }
+    },
+    plugins: [new BeepPlugin()]
 };
 
