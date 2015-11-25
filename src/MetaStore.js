@@ -107,6 +107,9 @@ module.exports = function () {
             if(isNaN(_.last(key.split('.'))) === false) {
                 var parentKey = getParentKey(key);
                 var candidate = that.getValue(parentKey);
+                if(candidate === undefined) {
+                    return false;
+                }
                 var keys = Object.keys(candidate);
                 return _.isEmpty(keys) === false && Object.keys(candidate).every((v, idx) => parseInt(v) === idx)
             }
@@ -123,8 +126,11 @@ module.exports = function () {
         return _.initial(key.split('.')).join('.');
     }
 
-    that.getValue = (key) => {
-        var leaf = that.getLeaf(key);
+    that.getValue = (key, create = true) => {
+        var leaf = that.getLeaf(key, create);
+        if(leaf === undefined) {
+            return undefined;
+        }
         var value = leaf.__value;
         var type = leaf.__meta ? leaf.__meta.type : undefined;
         var props = getProps(leaf);

@@ -31,4 +31,9 @@ describe('ReactiveStore.get()', function() {
         expect(_.isArray(rs1.get('arr'))).toBe(true);
         expect(rs1.get('arr')).toEqual([1,2,3]);
     });
+
+    it('should return undefined for keys that do not exist', function() {
+        expect(rs1.get('foo.bar.baz')).toBe(undefined);
+        expect(rs1.get('foo.bar')).toBe(undefined);
+    });
 });

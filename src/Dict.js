@@ -9,11 +9,8 @@ module.exports = () => {
     that.load = store.load;
     that.set = store.setValue;
     that.get = (key, dflt) => {
-        var value = store.getValue(key);
-        if (value === undefined) {
-            return dflt;
-        }
-        return value;
+        var value = store.getValue(key, false);
+        return value === undefined ? dflt : value;
     };
     that.addDependency = (key, dep) => {
         var deps = store.getMeta(key, 'deps');
