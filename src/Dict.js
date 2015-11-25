@@ -1,4 +1,5 @@
 var MetaStore = require('./MetaStore');
+var _ = require('lodash');
 
 module.exports = () => {
     var that = {};
@@ -19,7 +20,9 @@ module.exports = () => {
 
     that.getDependencies = (key) => store.getMeta(key, 'deps') || [];
     that.clearChildren = key => {
-        _.keys(that.get(key)).forEach(k => store.delete(`${key}.${k}`));
+        _.each(that.get(key), (v, k) => {
+            _.isPlainObject(v) ? that.clearChildren(`${key}.${k}`) : that.set(`${key}.${k}`, undefined);
+        });
     };
 
     return that;

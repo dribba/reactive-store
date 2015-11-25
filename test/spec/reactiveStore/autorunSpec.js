@@ -197,4 +197,14 @@ describe('ReactiveStore.autorun()', function() {
         rs1.set('foo.bar.baz.boo', 20);
         expect(spy.calls.count()).toBe(3);
     });
+
+    it('should listen to a key even after a clearChildren on a parent', () => {
+        var spy = jasmine.createSpy().and.callFake(() => rs1.get('foo.bar.baz.boo'));
+        rs1.autorun(spy);
+        expect(spy.calls.count()).toBe(1);
+
+        rs1.clearChildren('foo.bar');
+        rs1.set('foo.bar.baz.boo', 10);
+        expect(spy.calls.count()).toBe(2);
+    });
 });
