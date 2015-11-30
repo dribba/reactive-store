@@ -1,1 +1,1 @@
-require("babel-core/polyfill");
+global._babelPolyfill || require('babel-core/polyfill');
