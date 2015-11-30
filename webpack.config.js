@@ -10,7 +10,14 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.js$/, loader: 'babel-loader' }
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                exclude: [/node_modules/, /reactive-store/],
+                query: {
+                    presets: ['es2015', 'react']
+                }
+            }
         ]
     },
     devtool: "#inline-source-map",
