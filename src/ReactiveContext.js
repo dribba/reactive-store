@@ -1,5 +1,4 @@
 var R = require('ramda');
-console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
 var ReactiveContext = module.exports = function(fn) {
     var deps = [];
 
