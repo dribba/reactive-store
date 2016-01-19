@@ -1,12 +1,12 @@
 var R = require('ramda');
-
+console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
 var ReactiveContext = module.exports = function(fn) {
     var deps = [];
 
     var that = {
         fn: fn,
         flush: function () {
-            _.some(deps, R.prop('invalid')) && that.run(false);
+            deps.length && _.some(deps, R.prop('invalid')) && that.run(false);
         },
         addDependency: function (dep) {
             deps.indexOf(dep) === -1 && deps.push(dep);
@@ -34,6 +34,11 @@ ReactiveContext.autorun = function (fn) {
         ctx = ReactiveContext(fn);
         ctx.run(true);
         ReactiveContext.list.push(ctx);
+    }
+    return {
+        stop: () => {
+            ReactiveContext.list = _.without(ReactiveContext.list, ctx);
+        }
     }
 };
 
