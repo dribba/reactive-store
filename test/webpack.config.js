@@ -9,7 +9,9 @@ module.exports = {
     output: {filename: __dirname + '/tests.js'},
     module: {
         loaders: [
-            {test: /\.js$/, loader: 'babel-loader'}
+            {test: /\.js$/, loader: 'babel-loader', query: {
+                presets: ['es2015', 'react']
+            }}
         ]
     },
     devtool: "#inline-source-map",

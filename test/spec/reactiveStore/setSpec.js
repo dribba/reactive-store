@@ -102,4 +102,16 @@ describe('ReactiveStore.set', function() {
         rs1.set('obj', obj);
         expect(rs1.get('obj')).toEqual(obj);
     });
+
+    it('should allow you to set undefined on a key set with a string', () => {
+        rs1.set('obj', 'testing');
+        rs1.set('obj', undefined);
+        expect(rs1.get('obj')).not.toBeDefined();
+    });
+
+    it('should allow you to set undefined on a key with an object', () => {
+        rs1.set('obj', {something: 1});
+        rs1.set('obj', undefined);
+        expect(rs1.get('obj')).not.toBeDefined();
+    });
 });

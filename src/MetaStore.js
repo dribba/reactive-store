@@ -84,6 +84,10 @@ module.exports = function () {
             return [key].concat(_.map(value, (v, k) => that.setValue(`${key}.${k}`, v)));
         }
 
+        if(value === undefined) {
+            _.keys(that.getValue(key)).forEach(k => that.delete(`${key}.${k}`));
+        }
+
         that.setMeta(key, {type: 'plain'});
         that.getLeaf(key).__value = value;
         return [key];
