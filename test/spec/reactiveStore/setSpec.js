@@ -114,4 +114,17 @@ describe('ReactiveStore.set', function() {
         rs1.set('obj', undefined);
         expect(rs1.get('obj')).not.toBeDefined();
     });
+
+    it('should invalidate only one key of an object when set undefined', () => {
+        rs1.set('obj', {something:1, nothing: undefined});
+        expect(rs1.get('obj')).toEqual({something: 1});
+
+        rs1.set('arr', [{something: 1, nothing: undefined}]);
+        expect(rs1.get('arr.0')).toEqual({something: 1});
+    });
+
+    it('should allow an object with key "length"', () => {
+        rs1.set('obj', {length:10});
+        expect(rs1.get('obj')).toEqual({length: 10});
+    });
 });

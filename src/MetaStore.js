@@ -81,7 +81,7 @@ module.exports = function () {
 
         if(_.isPlainObject(value)) {
             that.setMeta(key, {type: 'object'});
-            return [key].concat(_.map(value, (v, k) => that.setValue(`${key}.${k}`, v)));
+            return [key].concat(Object.keys(value).map(k => that.setValue(`${key}.${k}`, value[k])));
         }
 
         if(value === undefined) {
