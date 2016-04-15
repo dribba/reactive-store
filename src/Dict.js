@@ -15,6 +15,7 @@ module.exports = () => {
         }
         return value;
     };
+    that.wipe = store.wipe;
     that.addDependency = (key, dep) => {
         var deps = store.getMeta(key, 'deps');
         store.setMeta(key, {deps: deps ? deps.concat(dep) : [dep]});

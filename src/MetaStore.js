@@ -18,7 +18,7 @@ var ___store = {
 module.exports = function () {
     var store = {};
     var that = {};
-
+    that.wipe = () => store = {};
     that.raw = () => store;
     that.dump = () => {
         var out = _.keys(store).reduce((memo, k) => {

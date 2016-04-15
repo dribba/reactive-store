@@ -128,8 +128,14 @@ describe('ReactiveStore.set', function() {
         expect(rs1.get('obj')).toEqual({length: 10});
     });
     
-    it('should be able to handle numeric keys', () => {
+    it('should be able to set a numeric key to a value', () => {
         rs1.set('111', 'xxx');
-        expect(rs1.get('111')).toEqual('xxx');
+        expect(rs1.get('111')).toBe('xxx');
+    });
+
+    it('should be able to set a number key to undefined', () => {
+        rs1.set('111', {});
+        rs1.set('111', undefined);
+        expect(rs1.get('111')).toBe(undefined);
     });
 });

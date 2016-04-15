@@ -63,7 +63,7 @@ function ReactiveStore() {
         autorun: ReactiveContext.autorun,
         nonReactive: ReactiveContext.nonReactive,
         raw: dict.raw,
-
+        wipe: dict.wipe,
         debug: {
             on: function() {
                 debug = true;
