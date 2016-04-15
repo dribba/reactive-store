@@ -127,4 +127,9 @@ describe('ReactiveStore.set', function() {
         rs1.set('obj', {length:10});
         expect(rs1.get('obj')).toEqual({length: 10});
     });
+    
+    it('should be able to handle numeric keys', () => {
+        rs1.set('111', 'xxx');
+        expect(rs1.get('111')).toEqual('xxx');
+    });
 });

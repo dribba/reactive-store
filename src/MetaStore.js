@@ -108,7 +108,8 @@ module.exports = function () {
             if(_.isArray(value)) {
                 return true;
             }
-            if(isNaN(_.last(key.split('.'))) === false) {
+            var parts = key.split('.');
+            if(parts.length > 1 && isNaN(_.last(parts)) === false) {
                 var parentKey = getParentKey(key);
                 var candidate = that.getValue(parentKey);
                 var keys = Object.keys(candidate);
@@ -189,7 +190,7 @@ module.exports = function () {
                 isLeaf(child) ? leafs.push(child) : leafs.push(walk(child));
                 return leafs;
             }, []);
-        };
+        }
     };
 
     return that;
@@ -200,7 +201,7 @@ module.exports = function () {
 
     function isLeaf(candidate) {
         return candidate.__value !== undefined && getProps(candidate).length === 0;
-    };
+    }
 
 
-}
+};
