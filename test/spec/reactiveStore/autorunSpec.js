@@ -133,16 +133,14 @@ describe('ReactiveStore.autorun()', function() {
     });
 
     it('should pass firstRun variable to autorun', function() {
-        var spy = jasmine.createSpy();
+        var firstRuns = [];
         rs1.autorun(function(firstRun) {
-            spy(firstRun);
+            firstRuns.push(firstRun);
             rs1.get('foo');
         });
         rs1.set('foo', 'bar');
         rs1.set('foo', 'baz');
-        expect(spy.calls.argsFor(0)).toEqual([true]);
-        expect(spy.calls.argsFor(1)).toEqual([false]);
-        expect(spy.calls.argsFor(2)).toEqual([false]);
+        expect(firstRuns).toEqual([true,false,false]);
     });
 
     it('should remember spys that exist on an object even if the object does not exist yet', () => {
