@@ -5,6 +5,3 @@ node_modules
 _SpecRunner.html
 build
 test/tests.js
-/.idea
-reactiveStore.iml
-reactive-store.iml

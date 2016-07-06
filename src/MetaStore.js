@@ -20,7 +20,7 @@ module.exports = function () {
     var that = {};
     that.wipe = () => store = {};
     that.raw = () => store;
-    that.dump = ( startKey = false ) => {
+    that.dump = startKey => {
 
         if(startKey) return that.getValue(startKey, false);
 
