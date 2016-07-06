@@ -31,4 +31,9 @@ describe('ReactiveStore.get()', function() {
         expect(_.isArray(rs1.get('arr'))).toBe(true);
         expect(rs1.get('arr')).toEqual([1,2,3]);
     });
+
+    it('should create an empty parent object, when child property does not exist', ()=>{
+        expect(rs1.get('does.not.exist')).toBe(undefined);
+        expect(rs1.get('does.not')).toEqual({});
+    });
 });

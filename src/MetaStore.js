@@ -20,7 +20,10 @@ module.exports = function () {
     var that = {};
     that.wipe = () => store = {};
     that.raw = () => store;
-    that.dump = () => {
+    that.dump = ( startKey = false ) => {
+
+        if(startKey) return that.getValue(startKey, false);
+
         var out = _.keys(store).reduce((memo, k) => {
                 memo[k] = that.getValue(k);
             return memo;
@@ -128,8 +131,13 @@ module.exports = function () {
         return _.initial(key.split('.')).join('.');
     }
 
-    that.getValue = (key) => {
-        var leaf = that.getLeaf(key);
+    that.getValue = (key, create = true) => {
+        var leaf = that.getLeaf(key, create);
+
+        if(leaf === undefined) {
+            return undefined;
+        }
+
         var value = leaf.__value;
         var type = leaf.__meta ? leaf.__meta.type : undefined;
         var props = getProps(leaf);

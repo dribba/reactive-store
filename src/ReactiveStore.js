@@ -55,10 +55,18 @@ function ReactiveStore() {
 
             return val;
         },
-        dump: dict.dump,
+
+        dump: (key)=>{
+            debug && console.log('dump('+key+')');
+            if(key === undefined) {
+                return dict.dump();
+            }
+
+            key = convertToDotNotation(key);
+            return dict.dump(key);
+        },
 
         load: dict.load,
-
 
         autorun: ReactiveContext.autorun,
         nonReactive: ReactiveContext.nonReactive,
