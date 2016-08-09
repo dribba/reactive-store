@@ -12,8 +12,8 @@ module.exports = {
         global: false
     },
     externals: {
-        'lodash': '_',
-        'ramda': 'R'
+        'lodash': true,
+        'ramda': true
     },
     module: {
         loaders: [

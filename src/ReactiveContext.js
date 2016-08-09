@@ -1,4 +1,6 @@
 var R = require('ramda');
+var _ = require('lodash');
+
 var ReactiveContext = module.exports = function(fn) {
     var deps = [];
 

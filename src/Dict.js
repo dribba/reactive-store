@@ -1,4 +1,5 @@
 var MetaStore = require('./MetaStore');
+var _ = require('lodash');
 
 module.exports = () => {
     var that = {};
