@@ -2,25 +2,33 @@ var path = require('path');
 var BeepPlugin = require('webpack-beep-plugin');
 
 
-// webpack.config.js
 module.exports = {
-    entry: './src/reactive-store-for-browser.js',
+    entry: './src/ReactiveStore.js',
     output: {
-        filename: 'dist/reactive-store-for-browser.js'
+        filename: 'lib/ReactiveStore.js',
+        libraryTarget: "umd",
+    },
+    node: {
+        global: false
+    },
+    externals: {
+        'lodash': '_',
+        'ramda': 'R'
     },
     module: {
         loaders: [
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
-                exclude: [/node_modules/, /reactive-store/],
+                exclude: [/node_modules/],
                 query: {
                     presets: ['es2015', 'react']
                 }
             }
         ]
     },
-    devtool: "#inline-source-map",
     plugins: [new BeepPlugin()]
+
 };
+
 
