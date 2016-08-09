@@ -10,14 +10,14 @@ module.exports = {
     module: {
         loaders: [
             {test: /\.js$/, loader: 'babel-loader', query: {
-                presets: ['es2015', 'react']
+                presets: ['es2015']
             }}
         ]
     },
     devtool: "#inline-source-map",
     resolve: {
         alias: {
-            src: path.normalize(__dirname + '/../src')
+            src: path.resolve('../src')
         }
     },
     plugins: [new BeepPlugin()]
