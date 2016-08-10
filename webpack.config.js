@@ -6,6 +6,7 @@ module.exports = {
     entry: './src/ReactiveStore.js',
     output: {
         filename: 'lib/ReactiveStore.js',
+        library: 'reactive-store',
         libraryTarget: "umd",
     },
     node: {
@@ -20,7 +21,6 @@ module.exports = {
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
-                exclude: [/node_modules/],
                 query: {
                     presets: ['es2015']
                 }
