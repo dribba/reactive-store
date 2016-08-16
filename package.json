@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "lodash": "~3.10.0",
-    "ramda": "~0.18.0"
+    "ramda": "~0.22.1"
   },
   "devDependencies": {
     "babel-core": "^6.2.1",
@@ -18,8 +18,7 @@
     "webpack-beep-plugin": "0.0.1"
   },
   "scripts": {
-    "test": "jasmine",
-    "dist": "./scripts/dist.sh"
+    "test": "jasmine"
   },
   "repository": {
     "type": "git",
