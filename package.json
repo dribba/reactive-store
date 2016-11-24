@@ -7,13 +7,11 @@
     "test": "test"
   },
   "dependencies": {
-    "lodash": "~3.10.0",
-    "ramda": "~0.22.1"
+    "lodash": "~3.10.0"
   },
   "devDependencies": {
     "babel-core": "^6.2.1",
     "babel-loader": "^6.2.0",
-    "babel-polyfill": "^6.2.0",
     "babel-preset-es2015": "^6.1.18",
     "webpack-beep-plugin": "0.0.1"
   },

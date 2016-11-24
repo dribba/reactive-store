@@ -1,13 +1,14 @@
-var R = require('ramda');
 var _ = require('lodash');
 
 var ReactiveContext = module.exports = function(fn) {
     var deps = [];
 
+    var prop = (key) => (obj) => key in obj ? obj[key] : undefined;
+
     var that = {
         fn: fn,
         flush: function () {
-            deps.length && _.some(deps, R.prop('invalid')) && that.run(false);
+            deps.length && _.some(deps, prop('invalid')) && that.run(false);
         },
         addDependency: function (dep) {
             deps.indexOf(dep) === -1 && deps.push(dep);

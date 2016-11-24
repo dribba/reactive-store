@@ -13,8 +13,7 @@ module.exports = {
         global: false
     },
     externals: {
-        'lodash': true,
-        'ramda': true
+        'lodash': true
     },
     module: {
         loaders: [
