@@ -11,8 +11,6 @@ function ReactiveStore() {
     var dict = Dict();
     var debug;
 
-    window.dict = dict;
-
     function convertToDotNotation(key) {
         return key.replace(/\[([0-9]*)\]/g, '.$1'); // replace [] array syntax with dot notation
     }
