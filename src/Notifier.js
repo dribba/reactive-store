@@ -1,3 +1,6 @@
+var Set = require('core-js/library/fn/set');
+var arrayFrom = require('core-js/library/fn/array/from');
+
 module.exports = function Notifier(dict) {
     var keysToNotify = new Set();
 
@@ -11,8 +14,8 @@ module.exports = function Notifier(dict) {
             var keys = keysToNotify;
             keysToNotify = new Set();
 
-            Array.from(keys).forEach(getDeps);
-            Array.from(deps).forEach(dep => dep.changed());
+            arrayFrom(keys).forEach(getDeps);
+            arrayFrom(deps).forEach(dep => dep.changed());
 
             function getDeps(key) {
                 while(key.length) {

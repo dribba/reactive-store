@@ -13,6 +13,7 @@
     "babel-core": "^6.2.1",
     "babel-loader": "^6.2.0",
     "babel-preset-es2015": "^6.1.18",
+    "core-js": "^2.4.1",
     "webpack-beep-plugin": "0.0.1"
   },
   "keywords": [

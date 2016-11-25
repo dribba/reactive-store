@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var objectKeys = require('core-js/library/fn/object/keys');
 
 // This is the structure of the store
 var ___store = {
@@ -84,7 +85,7 @@ module.exports = function () {
 
         if(_.isPlainObject(value)) {
             that.setMeta(key, {type: 'object'});
-            return [key].concat(Object.keys(value).map(k => that.setValue(`${key}.${k}`, value[k])));
+            return [key].concat(objectKeys(value).map(k => that.setValue(`${key}.${k}`, value[k])));
         }
 
         if(value === undefined) {
@@ -115,8 +116,8 @@ module.exports = function () {
             if(parts.length > 1 && isNaN(_.last(parts)) === false) {
                 var parentKey = getParentKey(key);
                 var candidate = that.getValue(parentKey);
-                var keys = Object.keys(candidate);
-                return _.isEmpty(keys) === false && Object.keys(candidate).every((v, idx) => parseInt(v) === idx)
+                var keys = objectKeys(candidate);
+                return _.isEmpty(keys) === false && keys.every((v, idx) => parseInt(v) === idx)
             }
             return false;
 
