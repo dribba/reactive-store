@@ -1,10 +1,10 @@
-var _ = require('lodash');
-var Dict = require('./Dict');
-var Notifier = require('./Notifier');
-var ReactiveContext = require('./ReactiveContext');
-var Dependency = require('./Dependency');
+import _ from 'lodash';
+import Dict from './Dict';
+import Notifier from './Notifier';
+import ReactiveContext from './ReactiveContext';
+import Dependency from './Dependency';
 
-function ReactiveStore() {
+export default function ReactiveStore() {
     "use strict";
     var dict = Dict();
     var debug;
@@ -68,6 +68,9 @@ function ReactiveStore() {
         nonReactive: ReactiveContext.nonReactive,
         raw: dict.raw,
         wipe: dict.wipe,
+        toString() {
+            return `ReactiveStore() => ${this.dump()}`;
+        },
         debug: {
             on: function() {
                 debug = true;
@@ -79,5 +82,3 @@ function ReactiveStore() {
     };
     return that;
 };
-
-module.exports = ReactiveStore;

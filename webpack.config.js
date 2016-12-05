@@ -1,11 +1,9 @@
 var path = require('path');
-var BeepPlugin = require('webpack-beep-plugin');
-
 
 module.exports = {
     entry: './src/ReactiveStore.js',
     output: {
-        filename: 'lib/ReactiveStore.js',
+        filename: 'lib/reactive-store.js',
         library: 'reactive-store',
         libraryTarget: "umd",
     },
@@ -20,14 +18,13 @@ module.exports = {
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
+                exclude: /node_modules/,
                 query: {
                     presets: ['es2015']
                 }
             }
         ]
-    },
-    plugins: [new BeepPlugin()]
-
+    }
 };
 
 

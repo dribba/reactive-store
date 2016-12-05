@@ -1,9 +1,10 @@
-var MetaStore = require('./MetaStore');
-var _ = require('lodash');
+import MetaStore from './MetaStore';
+import _ from 'lodash';
 
-module.exports = () => {
+export default function Dict() {
     var that = {};
     var store = MetaStore();
+
     that.raw = store.raw;
     that.delete = store.delete;
     that.dump = store.dump;
@@ -19,7 +20,7 @@ module.exports = () => {
     that.wipe = store.wipe;
     that.addDependency = (key, dep) => {
         var deps = store.getMeta(key, 'deps');
-        store.setMeta(key, {deps: deps ? deps.concat(dep) : [dep]});
+        store.setMeta(key, { deps: deps ? deps.concat(dep) : [dep] });
     };
 
     that.getDependencies = (key) => store.getMeta(key, 'deps') || [];

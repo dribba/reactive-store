@@ -1,6 +1,6 @@
-var _ = require('lodash');
+import _ from 'lodash';
 
-var ReactiveContext = module.exports = function(fn) {
+var ReactiveContext = function (fn) {
     var deps = [];
 
     var prop = (key) => (obj) => key in obj ? obj[key] : undefined;
@@ -29,7 +29,7 @@ ReactiveContext.flushAll = function () {
 };
 
 ReactiveContext.autorun = function (fn) {
-    var ctx = _.find(ReactiveContext.list, {fn: fn});
+    var ctx = _.find(ReactiveContext.list, { fn: fn });
     if (ctx) {
         ctx.run(false);
     } else {
@@ -44,7 +44,7 @@ ReactiveContext.autorun = function (fn) {
     }
 };
 
-ReactiveContext.nonReactive = function(fn) {
+ReactiveContext.nonReactive = function (fn) {
     var prevContext = ReactiveContext.current;
     ReactiveContext.current = undefined;
     fn();
@@ -53,3 +53,5 @@ ReactiveContext.nonReactive = function(fn) {
 
 
 ReactiveContext.list = [];
+
+export default ReactiveContext;

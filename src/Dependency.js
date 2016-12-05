@@ -1,6 +1,6 @@
-var ReactiveContext = require('./ReactiveContext');
+import ReactiveContext from './ReactiveContext';
 
-module.exports = function Dependency() {
+export default function Dependency() {
     var that = {
         changed: function () {
             that.invalid = true;

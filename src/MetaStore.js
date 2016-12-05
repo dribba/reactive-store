@@ -1,32 +1,32 @@
-var _ = require('lodash');
-var objectKeys = require('core-js/library/fn/object/keys');
+import _ from 'lodash';
+import objectKeys from 'core-js/library/fn/object/keys';
 
 // This is the structure of the store
-var ___store = {
-    a: {
-        b: {
-                __value: 2,
-                __meta: {},
-        },
-        c: {
-            __value: 3,
-            __meta: {}
-        },
-        __meta: {},
-    }
-};
+// var ___store = {
+//     a: {
+//         b: {
+//                 __value: 2,
+//                 __meta: {},
+//         },
+//         c: {
+//             __value: 3,
+//             __meta: {}
+//         },
+//         __meta: {},
+//     }
+// };
 
-module.exports = function () {
+export default function MetaStore() {
     var store = {};
     var that = {};
     that.wipe = () => store = {};
     that.raw = () => store;
     that.dump = startKey => {
 
-        if(startKey) return that.getValue(startKey, false);
+        if (startKey) return that.getValue(startKey, false);
 
         var out = _.keys(store).reduce((memo, k) => {
-                memo[k] = that.getValue(k);
+            memo[k] = that.getValue(k);
             return memo;
         }, {});
         convertDatesToStrings(out);
@@ -45,7 +45,7 @@ module.exports = function () {
         _.each(obj, (v, k) => that.setValue(k, v));
 
         function convertDateStringsToDates(obj) {
-            _.each(obj, function(v, k) {
+            _.each(obj, function (v, k) {
                 /(\d{4})-(\d{2})-(\d{2})T(\d{2})\:(\d{2})\:(\d{2})/.test(v) && (obj[k] = new Date(v));
             });
         }
@@ -73,35 +73,35 @@ module.exports = function () {
     };
 
     that.setValue = (key, value) => {
-        if(_.isArray(value)) {
-            that.setMeta(key, {type: 'array'});
+        if (_.isArray(value)) {
+            that.setMeta(key, { type: 'array' });
             clearExtraArrayValues();
             return [key].concat(value.map((it, idx) => that.setValue(`${key}.${idx}`, it)));
         }
 
-        if(isArrayElement(key, value)) {
-            that.setMeta(getParentKey(key), {type: 'array'});
+        if (isArrayElement(key, value)) {
+            that.setMeta(getParentKey(key), { type: 'array' });
         }
 
-        if(_.isPlainObject(value)) {
-            that.setMeta(key, {type: 'object'});
+        if (_.isPlainObject(value)) {
+            that.setMeta(key, { type: 'object' });
             return [key].concat(objectKeys(value).map(k => that.setValue(`${key}.${k}`, value[k])));
         }
 
-        if(value === undefined) {
+        if (value === undefined) {
             _.keys(that.getValue(key)).forEach(k => that.delete(`${key}.${k}`));
         }
 
-        that.setMeta(key, {type: 'plain'});
+        that.setMeta(key, { type: 'plain' });
         that.getLeaf(key).__value = value;
         return [key];
 
         function clearExtraArrayValues() {
             var curr = that.getValue(key);
-            if(_.isArray(curr)) {
+            if (_.isArray(curr)) {
                 var extra = curr.length - value.length;
-                if(extra > 0) {
-                    for(var i = value.length;i < value.length + extra; i++) {
+                if (extra > 0) {
+                    for (var i = value.length; i < value.length + extra; i++) {
                         that.delete(`${key}.${i}`)
                     }
                 }
@@ -109,11 +109,11 @@ module.exports = function () {
         }
 
         function isArrayElement(key, value) {
-            if(_.isArray(value)) {
+            if (_.isArray(value)) {
                 return true;
             }
             var parts = key.split('.');
-            if(parts.length > 1 && isNaN(_.last(parts)) === false) {
+            if (parts.length > 1 && isNaN(_.last(parts)) === false) {
                 var parentKey = getParentKey(key);
                 var candidate = that.getValue(parentKey);
                 var keys = objectKeys(candidate);
@@ -126,7 +126,7 @@ module.exports = function () {
 
     function getParentKey(key) {
         var parts = key.split('.');
-        if(parts.length === 1) {
+        if (parts.length === 1) {
             return undefined;
         }
         return _.initial(key.split('.')).join('.');
@@ -135,7 +135,7 @@ module.exports = function () {
     that.getValue = (key, create = true) => {
         var leaf = that.getLeaf(key, create);
 
-        if(leaf === undefined) {
+        if (leaf === undefined) {
             return undefined;
         }
 
@@ -143,11 +143,11 @@ module.exports = function () {
         var type = leaf.__meta ? leaf.__meta.type : undefined;
         var props = getProps(leaf);
 
-        if(type === undefined && props.length === 0) {
+        if (type === undefined && props.length === 0) {
             return undefined;
         }
 
-        if(value !== undefined) {
+        if (value !== undefined) {
             return value;
         }
 
@@ -156,7 +156,7 @@ module.exports = function () {
             return undefined;
         }
 
-        if(that.getMeta(key, 'type') === 'array') {
+        if (that.getMeta(key, 'type') === 'array') {
             return props.reduce((out, idx) => {
                 var value = that.getValue(`${key}.${idx}`);
                 value && out.push(value);
@@ -184,7 +184,7 @@ module.exports = function () {
                 }
                 return storeObj[part];
             }, store);
-        } catch(e) {
+        } catch (e) {
             return undefined;
         }
     };

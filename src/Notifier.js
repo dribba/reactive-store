@@ -1,7 +1,7 @@
-var Set = require('core-js/library/fn/set');
-var arrayFrom = require('core-js/library/fn/array/from');
+import Set from 'core-js/library/fn/set';
+import arrayFrom from 'core-js/library/fn/array/from';
 
-module.exports = function Notifier(dict) {
+export default function Notifier(dict) {
     var keysToNotify = new Set();
 
     var that = {

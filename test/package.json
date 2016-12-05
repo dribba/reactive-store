@@ -2,12 +2,12 @@
   "name": "test",
   "version": "0.0.0",
   "description": "",
-  "main": "webpack.config.js",
+  "main": "build/tests.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ws"
+    "beforeTest": "webpack --config webpack.config.js",
+    "test": "ws"
   },
-  "author": "",
+  "author": "David Ribba",
   "license": "BSD",
   "dependencies": {
     "source-map-support": "~0.3.2",
