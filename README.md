@@ -69,14 +69,41 @@ reactiveStore.debug.off(); // debug mode is off
 
 ### Reactive Methods
 
-**.autorun( fn )** Accepts a function to be autorun ala Meteor.
+**.autorun( firstRun => {} )** Accepts a function to be autorun ala Meteor, this means that the given function will be called immediately and then again on every update of the keys used within the function
 
 ```javascript
-/*example here*/
+var RS = ReactiveStore();
+RS.autorun(() => {
+    console.log(RS.get('foo.bar'));
+});
+// > undefined
+RS.set('foo.bar', 'Hello world');
+// > 'Hello world'
+
+// This function will be run only once and never again
+// because there's no RS.get in the body
+RS.autorun(firstRun => {
+    console.log('Hello');
+});
 ```
 
 **.nonReactive( fn )** Accepts a function to be excepted from a parent instance of autorun.
 
 ```javascript
-/*example here*/
+var RS = ReactiveStore();
+RS.autorun(() => {
+    var foo = RS.get('foo');
+    var bar;
+    RS.nonReactive(() => {
+        bar = RS.get('bar');
+    });
+    console.log(foo + ', ' + bar);
+});
+// > undefined, undefined
+RS.set('bar', 'world');
+// Nothing happens since RS.get('bar') happens in a non reactive context
+RS.set('foo', 'Hello');
+// > 'Hello, world'
+RS.set('foo', 'Hi');
+// > 'Hi, world'
 ```
